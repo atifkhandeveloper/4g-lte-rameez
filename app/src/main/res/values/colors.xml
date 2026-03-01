@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#77BD25</color>
+    <color name="purple_700">#77B425</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black_new">#FF000000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#0DFF96</color>
+    <color name="splash_blue">#0088D1</color>
+    <color name="lightTextC">#707070</color>
+    <color name="wifi_bg1">#ECECEC</color>
+    <color name="textColor">@color/black</color>
+    <color name="lightExt">#F9F9F9</color>
+    <color name="yellow">#FFEE00</color>
+    <color name="blueC">#246EDC</color>
+    <color name="blueStroke">#2B59FF</color>
+    <color name="redtext">#FF0000</color>
+    <color name="greenUsed">#17DF00</color>
+    <color name="backgoundSm">#EFEDED</color>
+
+    <color name="status_bar_color_light">#F9F9F9</color>
+
+    <color name="lightGray">#F2F2F2</color>
+    <color name="darkGray">#B7B7B7</color>
+    <color name="darkerGray">#807F7F</color>
+    <color name="adsBgColor">#F2F2F2</color>
+
+    <color name="gray">#BCBCBC</color>
+    <color name="black_medium">#212121</color>
+    <color name="darkModeColor">#252B37</color>
+    <color name="blue">#00B1FF</color>
+    <color name="blue_dark">#0088FF</color>
+    <color name="ads_bg_color">#f3f4f6</color>
+    <color name="toolbar_background">#ffffff</color>
+    <color name="exit_text_color">#00B1FF</color>
+    <color name="greyColor_10">#80707070</color>
+    <color name="colorPrimary">#00B1FF</color>
+    <color name="setting_item_bg_color">#f5f5f5</color>
+    <color name="orange">#F32727</color>
+    <color name="splash">#840000</color>
+
+    <color name="appBlue">#0080FF</color>
+
+    <color name="gnt_blue">#4285f4</color>
+    <color name="gnt_ad_green">#3A6728</color>
+    <color name="gnt_gray">#808080</color>
+    <color name="gnt_white">#FFFFFF</color>
+</resources>

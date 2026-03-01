@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "147069834345",
+    "firebase_url": "https://g-lte-c1d2b-default-rtdb.firebaseio.com",
+    "project_id": "g-lte-c1d2b",
+    "storage_bucket": "g-lte-c1d2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147069834345:android:8407e4747e6f74b1687ef8",
+        "android_client_info": {
+          "package_name": "com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlkBIKyNA7dgVWzgXYbTX0WPTnG8eopNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

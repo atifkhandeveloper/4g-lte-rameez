@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:name=".app.AppDelegate"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:largeHeap="true"
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.4gLite">
+
+
+        <service
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.fcm.FireBaseMessage"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.AnimationActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.splash.SecondTimeOnly"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.splash.SelectCategories" -->
+        <!-- android:exported="false" /> -->
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SelectLangActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.BoardingActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.HowtoUseActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SignalStrengthActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SimInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.LTEDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.LteSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SpeedTestActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.NetSpeedActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.DataUsageActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.PurchaseActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.splash.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/appId" />
+
+    </application>
+
+</manifest>

@@ -1,0 +1,26 @@
+package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils
+
+object ConstantVariables {
+    const val ENGLISH="en"
+    const val CHINISE="zh"
+    const val HINDI="hi"
+    const val SPANISH="es"
+    const val ITLIAN="it"
+    const val AFRECIAN="af"
+    const val VIETNAMESE="vi"
+    const val KOREAN="ko"
+    const val JAPANESE="ja"
+    const val MALAY="ms"
+    const val INDONESIAN="in"
+    const val LANG_KEY="LANG_KEY"
+    const val TIME="time"
+    const val DATE="time"
+    const val ID="idd"
+    const val USER_NAME="naemd"
+    const val CONTACT_NO="CONTACTNO"
+    const val DARK_MODE="DARK_MODE"
+    const val WHITE_MODE="WHITE_MODE"
+    const val PASS_DATA="datapass"
+    const val PHONE_INDEX="PHONE_INDEX"
+    const val Network_Error="Network error, please try later"
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="toolbar_background">#1f2c34</color>
+    <color name="exit_text_color">#ffffff</color>
+    <color name="colorPrimary">#00B1FF</color>
+    <color name="setting_item_bg_color">#3b4453</color>
+    <color name="black">#ffffff</color>
+    <color name="backgoundSm">#3b4453</color>
+</resources>

@@ -1,0 +1,134 @@
+<resources>
+    <string name="app_name">4G LTE</string>
+
+    <string name="splashT">LET Setting Enjoy Fast Internet</string>
+    <string name="prT">This action may contain Ad</string>
+    <string name="letSetting">LTE Setting</string>
+    <string name="howtoUser">How to use ?</string>
+    <string name="save15">Save 15%</string>
+    <string name="rs200">Only Rs: 200</string>
+    <string name="lifeTIme">For Life Time</string>
+    <string name="noAds">No Ads</string>
+    <string name="betterPerfor">Better Performance</string>
+    <string name="oneTPur">One Time Purchase</string>
+    <string name="lifeTAccess">Life Time Access</string>
+    <string name="noSubscription">No Subscription</string>
+    <string name="purchNow">Purchase Now</string>
+    <string name="loadingAd">Loading Ad</string>
+    <string name="darkMode">Dark Mode</string>
+    <string name="defaultMode">White Mode</string>
+    <string name="removeAds">Remove Ads</string>
+    <string name="appLang">App Language</string>
+    <string name="settLangT">Select the Language</string>
+    <string name="settLangPerfer">Select the language that you prefer</string>
+    <string name="systemDef">System Default</string>
+    <string name="language">Languages</string>
+    <string name="full_month_data_usages">This Month Data Usages</string>
+    <string name="wifi">WiFI</string>
+    <string name="mobile">Mobile</string>
+    <string name="last_30_days">Last 30 Days</string>
+    <string name="speedTest">Speed Test</string>
+    <string name="server">Server</string>
+    <string name="ip">IP</string>
+    <string name="go">GO</string>
+    <string name="fourgSettings">4G Settings</string>
+    <string name="beloAndroid11">Below Android 11</string>
+    <string name="aboveAndroid11">Android 11 and above</string>
+    <string name="incoming">Incoming</string>
+    <string name="upload">Outgoing</string>
+    <string name="phoneInfo">Phone Info:</string>
+    <string name="imei">Device Id:</string>
+    <string name="phoneNumber">Phone Number:</string>
+    <string name="mobileNetwork">Mobile Network:</string>
+    <string name="subidOfDefoultSim">Subid of default data Sim:</string>
+    <string name="currenNetwork">Current Network:</string>
+    <string name="raoming">Roaming :</string>
+    <string name="dataservice">Data service:</string>
+    <string name="datanetworkType">Data Network Type:</string>
+    <string name="voicenetworkType">Voice Network Type:</string>
+    <string name="dlbandWidth">Dl Bandwidth(kbps):</string>
+    <string name="signlaStrengh">Signal Strength:</string>
+    <string name="selectPhoneIndex">Select Phone Index:</string>
+    <string name="Phone0">Phone 0</string>
+    <string name="Phone1">Phone 1</string>
+    <string name="connecting">Connecting</string>
+    <string name="download">Download</string>
+    <string name="uploadtext">Upload</string>
+    <string name="siminfo">Sim Info</string>
+    <string name="carrierName">Carrier Name:</string>
+    <string name="countryCOde">Country Code:</string>
+    <string name="displayName">Display Name:</string>
+    <string name="mnc">MNC:</string>
+    <string name="simOne">SIM 1 information</string>
+    <string name="sim2">SIM 2 information</string>
+    <string name="sim1Sg">SIM 1</string>
+    <string name="sim2Sg">SIM 2</string>
+    <string name="signalSHome">Signal \n Strength</string>
+    <string name="speedTestH">Speed \n Test</string>
+    <string name="simInfoH">Sim \n Info</string>
+    <string name="dataUsageH">Data \n Usage</string>
+    <string name="mobilenetworkCarrier">Mobile Network Carrier Name</string>
+    <string name="enableMobileData">Enable MobileData</string>
+    <string name="disableMobileData">Disable MobileData</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="yes">Roaming</string>
+    <string name="no">Not Roaming</string>
+    <string name="mobileNetworkSettings">Network Settings</string>
+    <string name="runPingTest">Run Ping Test</string>
+    <string name="pinghostNameF">Ping Hostname (www.google.com) IPv4:</string>
+    <string name="pinghostNameS">Ping Hostname (www.google.com) IPv4:</string>
+    <string name="dataSent">Data Sent</string>
+    <string name="httpClient">Http Client Test</string>
+    <string name="dataReceived">Data Received</string>
+    <string name="numberofPpp">Number of PPP Reset: Since Boot:</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="tabtoexit">Tab to Exit</string>
+    <string name="start">Start</string>
+    <string name="mbps">%s Mbps</string>
+    <string name="restart_test">Restart Test</string>
+    <string name="stop">Processing...</string>
+    <string name="are_you_sure_you_want_to_exit">Are you sure you want to Exit?</string>
+    <string name="cancel">Cancel</string>
+    <string name="exit">Exit</string>
+    //false
+    <string name="is_premium" translatable="false">is_premium</string>
+    <string name="chines" translatable="false">Chines</string>
+    <string name="hindi" translatable="false">Hindi</string>
+    <string name="english" translatable="false">English</string>
+    <string name="spanish" translatable="false">Spanish</string>
+    <string name="italian" translatable="false">Italian</string>
+    <string name="persian" translatable="false">Persian</string>
+    <string name="afrikaans" translatable="false">Afrikaans</string>
+    <string name="hostF" translatable="false">(www.google.com) IPv4:</string>
+    <string name="hostS" translatable="false">(www.google.com) IPv6:</string>
+    <string name="indonesian" translatable="false">Indonesian</string>
+    <string name="japanese" translatable="false">Japanese</string>
+    <string name="korean" translatable="false">Korean</string>
+    <string name="vietnamese" translatable="false">Vietnamese</string>
+    <string name="malay" translatable="false">Malay</string>
+    <string name="privacy_policy" translatable="false">Privacy Policy</string>
+    <string name="rate_us" translatable="false">Rate Us</string>
+    <string name="share_app" translatable="false">Share App</string>
+    <string name="resetbtn" translatable="false">Reset</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+
+    <!--    <string name="native_id">ca-app-pub-3940256099942544/2247696110</string>-->
+    <!--    <string name="native_onboard_id">ca-app-pub-3940256099942544/2247696110</string>-->
+    <!--    <string name="native_home_id">ca-app-pub-3940256099942544/2247696110</string>-->
+    <!--    <string name="native_speed_and_data_usage_id">ca-app-pub-3940256099942544/2247696110</string>-->
+    <!--    <string name="native_signal_and_sim_id">ca-app-pub-3940256099942544/2247696110</string>-->
+    <!--    <string name="native_exit_and_settings_id">ca-app-pub-3940256099942544/2247696110</string>-->
+
+
+    <!--    Admob Testing Ads -->
+
+        <string name="appId" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+        <string name="bannerId" translatable="false">ca-app-pub-3940256099942544/2014213617</string>
+        <string name="opeApp" translatable="false">ca-app-pub-3940256099942544/9257395921</string>
+        <string name="nativeId" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="inter" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
+
+</resources>

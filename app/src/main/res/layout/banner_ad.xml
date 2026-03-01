@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/banner_ad"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/_3sdp"
+    android:elevation="@dimen/_5sdp"
+    android:layout_marginTop="@dimen/_5sdp"
+    app:cardPreventCornerOverlap="false">
+
+    <RelativeLayout
+        android:id="@+id/adcontainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="Banner Ad Loading..."
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp" />
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.LTEDetailsActivity">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toolBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@color/backgoundSm"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/toolBar"
+                    layout="@layout/toolbar_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/_15sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/toolbarMenu"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolBarLayout">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/mobileNetworkSettingsBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_medium"
+                        android:gravity="center"
+                        android:text="@string/mobileNetworkSettings"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <!--                <TextView-->
+                    <!--                    android:id="@+id/disableData"-->
+                    <!--                    android:layout_width="wrap_content"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:fontFamily="@font/poppins_medium"-->
+                    <!--                    android:gravity="center"-->
+                    <!--                    android:layout_marginTop="@dimen/_6sdp"-->
+                    <!--                    android:text="@string/disableMobileData"-->
+                    <!--                    android:textColor="@color/black"-->
+                    <!--                    android:textSize="@dimen/_12ssp"-->
+                    <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                    <!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/customPhoneIndexCardViev"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/constraintLayout2">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/phone0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_medium"
+                        android:gravity="center"
+                        android:text="@string/Phone0"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/phone1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:gravity="center"
+                        android:text="@string/Phone1"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_40sdp"
+                android:background="@color/backgoundSm"
+                android:paddingTop="@dimen/_6sdp"
+                android:paddingBottom="@dimen/_6sdp"
+                app:layout_constraintTop_toBottomOf="@id/toolBarLayout">
+
+                <ImageView
+                    android:id="@+id/selectPhoneIndexBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:src="@drawable/spinnericone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="@string/selectPhoneIndex"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/selectedPhoneIndexTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="@string/selectPhoneIndex"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/phoneIndexDetailsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
+                <TextView
+                    android:id="@+id/ime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/imei"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/imeiTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="@string/selectPhoneIndex"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/ime"
+                    app:layout_constraintStart_toEndOf="@id/ime"
+                    app:layout_constraintTop_toTopOf="@id/ime" />
+
+                <TextView
+                    android:id="@+id/phoneN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/mobileNetwork"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ime" />
+
+                <TextView
+                    android:id="@+id/phoneNumberTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="@string/phoneNumber"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/phoneN"
+                    app:layout_constraintStart_toEndOf="@id/phoneN"
+                    app:layout_constraintTop_toTopOf="@id/phoneN" />
+
+                <TextView
+                    android:id="@+id/currenSb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/mobilenetworkCarrier"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/phoneN" />
+
+                <TextView
+                    android:id="@+id/subidOfDefSimTv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="start"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/currenSb"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/currenSb"
+                    app:layout_constraintTop_toTopOf="@id/currenSb" />
+
+                <TextView
+                    android:id="@+id/currenNet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/currenNetwork"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/currenSb" />
+
+                <TextView
+                    android:id="@+id/currenNetworkTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="@string/selectPhoneIndex"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/currenNet"
+                    app:layout_constraintStart_toEndOf="@id/currenNet"
+                    app:layout_constraintTop_toTopOf="@id/currenNet" />
+
+                <TextView
+                    android:id="@+id/roaming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/raoming"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/currenNetworkTv" />
+
+                <TextView
+                    android:id="@+id/roamingTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="@string/selectPhoneIndex"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/roaming"
+                    app:layout_constraintStart_toEndOf="@id/roaming"
+                    app:layout_constraintTop_toTopOf="@id/roaming" />
+
+                <TextView
+                    android:id="@+id/dataService"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/dataservice"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/roamingTv" />
+
+                <TextView
+                    android:id="@+id/dataServiceTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="@string/selectPhoneIndex"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/dataService"
+                    app:layout_constraintStart_toEndOf="@id/dataService"
+                    app:layout_constraintTop_toTopOf="@id/dataService" />
+                <!--            <TextView-->
+                <!--                android:id="@+id/networkType"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:fontFamily="@font/poppins_medium"-->
+                <!--                android:gravity="center"-->
+                <!--                android:text="@string/datanetworkType"-->
+                <!--                android:textColor="@color/black"-->
+                <!--                android:textSize="@dimen/_12ssp"-->
+                <!--                app:layout_constraintStart_toStartOf="parent"-->
+                <!--                app:layout_constraintTop_toBottomOf="@id/dataServiceTv" />-->
+                <!--            <TextView-->
+                <!--                android:id="@+id/networkTypeTv"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:layout_marginStart="@dimen/_10sdp"-->
+                <!--                android:fontFamily="@font/poppins"-->
+                <!--                android:gravity="center"-->
+                <!--                android:text="@string/selectPhoneIndex"-->
+                <!--                android:textColor="@color/lightTextC"-->
+                <!--                android:textSize="@dimen/_12ssp"-->
+                <!--                app:layout_constraintBottom_toBottomOf="@id/networkType"-->
+                <!--                app:layout_constraintStart_toEndOf="@id/networkType"-->
+                <!--                app:layout_constraintTop_toTopOf="@id/networkType"-->
+                <!--                />-->
+                <TextView
+                    android:id="@+id/signalStrenth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/signlaStrengh"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dataService" />
+
+                <TextView
+                    android:id="@+id/signalStrenthTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="@string/selectPhoneIndex"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/signalStrenth"
+                    app:layout_constraintStart_toEndOf="@id/signalStrenth"
+                    app:layout_constraintTop_toTopOf="@id/signalStrenth" />
+                <!--            <TextView-->
+                <!--                android:id="@+id/voicenetworkType"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:fontFamily="@font/poppins_medium"-->
+                <!--                android:gravity="center"-->
+                <!--                android:text="@string/voicenetworkType"-->
+                <!--                android:textColor="@color/black"-->
+                <!--                android:textSize="@dimen/_12ssp"-->
+                <!--                app:layout_constraintStart_toStartOf="parent"-->
+                <!--                app:layout_constraintTop_toBottomOf="@id/signalStrenthTv" />-->
+                <!--            <TextView-->
+                <!--                android:id="@+id/voiceNetworkTypeTv"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:layout_marginStart="@dimen/_10sdp"-->
+                <!--                android:fontFamily="@font/poppins"-->
+                <!--                android:gravity="center"-->
+                <!--                android:text="@string/selectPhoneIndex"-->
+                <!--                android:textColor="@color/lightTextC"-->
+                <!--                android:textSize="@dimen/_12ssp"-->
+                <!--                app:layout_constraintBottom_toBottomOf="@id/voicenetworkType"-->
+                <!--                app:layout_constraintStart_toEndOf="@id/voicenetworkType"-->
+                <!--                app:layout_constraintTop_toTopOf="@id/voicenetworkType"-->
+                <!--                />-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/lteSettingsBtn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_35sdp"
+                android:background="@color/backgoundSm"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:text="@string/letSetting"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintEnd_toEndOf="@id/runPingBtn"
+                app:layout_constraintStart_toStartOf="@+id/runPingBtn"
+                app:layout_constraintTop_toBottomOf="@id/phoneIndexDetailsLayout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/runPingBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:background="@color/backgoundSm"
+                android:backgroundTint="@color/blueC"
+                android:padding="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_6sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lteSettingsBtn">
+
+                <TextView
+                    android:id="@+id/tijktle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/runPingTest"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/resetbtn"
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:background="@color/backgoundSm"
+                android:backgroundTint="@color/blueC"
+                android:padding="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_6sdp"
+                app:layout_constraintBottom_toBottomOf="@+id/runPingBtn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lteSettingsBtn"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/txtreset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/resetbtn"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/runlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/runPingBtn">
+
+                <TextView
+                    android:id="@+id/imme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/pinghostNameF"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/hostFirstTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/imme"
+                    app:layout_constraintStart_toEndOf="@id/imme"
+                    app:layout_constraintTop_toTopOf="@id/imme" />
+
+                <TextView
+                    android:id="@+id/phhoneN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/pinghostNameS"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/imme" />
+
+                <TextView
+                    android:id="@+id/pingHostSTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/phhoneN"
+                    app:layout_constraintStart_toEndOf="@id/phhoneN"
+                    app:layout_constraintTop_toTopOf="@id/phhoneN" />
+
+                <TextView
+                    android:id="@+id/phhoeN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/httpClient"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/phhoneN" />
+
+                <TextView
+                    android:id="@+id/phNumberTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/phhoeN"
+                    app:layout_constraintStart_toEndOf="@id/phhoeN"
+                    app:layout_constraintTop_toTopOf="@id/phhoeN" />
+                <!--            <TextView-->
+                <!--                android:id="@+id/voicenetworkType"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:fontFamily="@font/poppins_medium"-->
+                <!--                android:gravity="center"-->
+                <!--                android:text="@string/voicenetworkType"-->
+                <!--                android:textColor="@color/black"-->
+                <!--                android:textSize="@dimen/_12ssp"-->
+                <!--                app:layout_constraintStart_toStartOf="parent"-->
+                <!--                app:layout_constraintTop_toBottomOf="@id/signalStrenthTv" />-->
+                <!--            <TextView-->
+                <!--                android:id="@+id/voiceNetworkTypeTv"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:layout_marginStart="@dimen/_10sdp"-->
+                <!--                android:fontFamily="@font/poppins"-->
+                <!--                android:gravity="center"-->
+                <!--                android:text="@string/selectPhoneIndex"-->
+                <!--                android:textColor="@color/lightTextC"-->
+                <!--                android:textSize="@dimen/_12ssp"-->
+                <!--                app:layout_constraintBottom_toBottomOf="@id/voicenetworkType"-->
+                <!--                app:layout_constraintStart_toEndOf="@id/voicenetworkType"-->
+                <!--                app:layout_constraintTop_toTopOf="@id/voicenetworkType"-->
+                <!--                />-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/runPV"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/darkGray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/runlay" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/runly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/runPV">
+
+                <TextView
+                    android:id="@+id/imegh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/dataSent"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/datasentTv"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="start"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/imegh"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/imegh"
+                    app:layout_constraintTop_toTopOf="@id/imegh" />
+
+                <TextView
+                    android:id="@+id/phneN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/dataReceived"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/imegh" />
+
+                <TextView
+                    android:id="@+id/datareceivedTv"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="start"
+                    android:textColor="@color/lightTextC"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/phneN"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/phneN"
+                    app:layout_constraintTop_toTopOf="@id/phneN" />
+
+                <TextView
+                    android:id="@+id/hhoeN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:text="@string/numberofPpp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/phneN" />
+                <!--                <TextView-->
+                <!--                    android:id="@+id/phNumberTv"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginStart="@dimen/_10sdp"-->
+                <!--                    android:fontFamily="@font/poppins"-->
+                <!--                    android:gravity="center"-->
+                <!--                    android:textColor="@color/lightTextC"-->
+                <!--                    android:textSize="@dimen/_12ssp"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="@id/phhoeN"-->
+                <!--                    app:layout_constraintStart_toEndOf="@id/phhoeN"-->
+                <!--                    app:layout_constraintTop_toTopOf="@id/phhoeN"-->
+                <!--                    />-->
+                <!--            <TextView-->
+                <!--                android:id="@+id/voicenetworkType"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:fontFamily="@font/poppins_medium"-->
+                <!--                android:gravity="center"-->
+                <!--                android:text="@string/voicenetworkType"-->
+                <!--                android:textColor="@color/black"-->
+                <!--                android:textSize="@dimen/_12ssp"-->
+                <!--                app:layout_constraintStart_toStartOf="parent"-->
+                <!--                app:layout_constraintTop_toBottomOf="@id/signalStrenthTv" />-->
+                <!--            <TextView-->
+                <!--                android:id="@+id/voiceNetworkTypeTv"-->
+                <!--                android:layout_width="wrap_content"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:layout_marginStart="@dimen/_10sdp"-->
+                <!--                android:fontFamily="@font/poppins"-->
+                <!--                android:gravity="center"-->
+                <!--                android:text="@string/selectPhoneIndex"-->
+                <!--                android:textColor="@color/lightTextC"-->
+                <!--                android:textSize="@dimen/_12ssp"-->
+                <!--                app:layout_constraintBottom_toBottomOf="@id/voicenetworkType"-->
+                <!--                app:layout_constraintStart_toEndOf="@id/voicenetworkType"-->
+                <!--                app:layout_constraintTop_toTopOf="@id/voicenetworkType"-->
+                <!--                />-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</ScrollView>

@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/exit_dialog_bg">
+
+    <TextView
+        android:id="@+id/tryTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Try One of These Feature:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/btnFour"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tryTxt">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/endG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.91" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/centG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/startG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.07" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/speedTestBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/centG"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/spped"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginVertical="@dimen/_2sdp"
+                android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:background="@drawable/rounded_shape_bc"
+                android:elevation="2dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:maxLines="2"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_5sdp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/settingbc"
+                android:text="@string/speedTestH"
+                android:textColor="@color/black_new"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/speedIconeWh"
+                android:layout_width="@dimen/_43sdp"
+                android:layout_height="@dimen/_43sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:background="@drawable/speed_test_icon"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/spped"
+                app:layout_constraintEnd_toStartOf="@id/spped"
+                app:layout_constraintStart_toStartOf="@+id/spped"
+                app:layout_constraintTop_toTopOf="@+id/spped" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dataUsageBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/centG"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/sped"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginVertical="@dimen/_2sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:background="@drawable/rounded_shape_bc"
+                android:elevation="2dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:maxLines="2"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_5sdp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/settingbc"
+                android:text="@string/dataUsageH"
+                android:textColor="@color/black_new"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/dataUsageWhIcone"
+                android:layout_width="@dimen/_43sdp"
+                android:layout_height="@dimen/_43sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:background="@drawable/data_use"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/sped"
+                app:layout_constraintEnd_toStartOf="@id/sped"
+                app:layout_constraintStart_toStartOf="@+id/sped"
+                app:layout_constraintTop_toTopOf="@+id/sped" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/signalSrengthBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/centG"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/speedTestBtn">
+
+            <TextView
+                android:id="@+id/ped"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginVertical="@dimen/_2sdp"
+                android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:background="@drawable/rounded_shape_bc"
+                android:elevation="2dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:maxLines="2"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:paddingBottom="@dimen/_2sdp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/settingbc"
+                android:text="@string/signalSHome"
+                android:textColor="@color/black_new"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/signalWhIcone"
+                android:layout_width="@dimen/_43sdp"
+                android:layout_height="@dimen/_43sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:background="@drawable/signal_strength_icon"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/ped"
+                app:layout_constraintEnd_toStartOf="@id/ped"
+                app:layout_constraintStart_toStartOf="@+id/ped"
+                app:layout_constraintTop_toTopOf="@+id/ped" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/simInfoBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/centG"
+            app:layout_constraintTop_toBottomOf="@id/dataUsageBtn">
+
+            <TextView
+                android:id="@+id/pd"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginVertical="@dimen/_2sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:background="@drawable/rounded_shape_bc"
+                android:elevation="2dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:maxLines="2"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingTop="@dimen/_2sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:paddingBottom="@dimen/_2sdp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/settingbc"
+                android:text="@string/simInfoH"
+                android:textColor="@color/black_new"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/simInfoWhIcone"
+                android:layout_width="@dimen/_43sdp"
+                android:layout_height="@dimen/_43sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:background="@drawable/sim_info_icon"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/pd"
+                app:layout_constraintEnd_toStartOf="@id/pd"
+                app:layout_constraintStart_toStartOf="@+id/pd"
+                app:layout_constraintTop_toTopOf="@+id/pd" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/exitFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/dialogContainer"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnFour">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnFour">
+
+            <TextView
+                android:id="@+id/tv_textView8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="25.7dp"
+                android:layout_marginEnd="40dp"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:text="@string/are_you_sure_you_want_to_exit"
+                android:textColor="@color/black"
+                android:textSize="14.7sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_cancelBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/rate_us_dialog_rate_us_button_background"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/black_new"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_textView8" />
+
+            <TextView
+                android:id="@+id/tv_okBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/delete_dialog_delete_btn_bg"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:singleLine="true"
+                android:text="@string/exit"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_cancelBtn" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_okBtn">
+
+                <include layout="@layout/native_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:id="@+id/ad_container"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginBottom="10dp"-->
+<!--                android:background="@drawable/gnt_outline_shape"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_okBtn">-->
+
+<!--                <car.google.android.ads.nativetemplates.TemplateView-->
+<!--                    android:id="@+id/my_storage_template"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_margin="8dp"-->
+<!--                    android:visibility="gone"-->
+<!--                    app:gnt_template_type="@layout/gnt_small_template_view"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
