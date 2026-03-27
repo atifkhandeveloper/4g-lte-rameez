@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/purple"
     android:fillViewport="true"
+
     tools:context="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.splash.SplashActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,34 +26,20 @@
 
             <ImageView
                 android:id="@+id/iv4G"
-                android:layout_width="@dimen/_85sdp"
+                android:layout_width="@dimen/_200sdp"
                 android:layout_height="@dimen/_85sdp"
                 android:layout_centerVertical="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/fourglogog" />
+                android:src="@drawable/splash_logo" />
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/lav_progress_bar"
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_marginStart="-20dp"
-                android:layout_marginBottom="@dimen/_20sdp"
-                android:layout_toEndOf="@id/iv4G"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/splash_loading"
-                app:lottie_speed="2" />
         </RelativeLayout>
 
-        <TextView
+        <ImageView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins"
+            android:layout_width="@dimen/_150sdp"
+            android:layout_height="@dimen/_60sdp"
             android:gravity="center"
-            android:text="LTE Setting \n Enjoy Fast Internet"
+            android:src="@drawable/splash_text"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spLogo" />
@@ -61,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.88" />
+            app:layout_constraintGuide_begin="624dp" />
 
         <ProgressBar
             android:id="@+id/progressBar"
