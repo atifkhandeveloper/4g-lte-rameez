@@ -7,6 +7,7 @@
     android:layout_gravity="center"
     android:fillViewport="true"
     android:gravity="center"
+    android:background="@color/purple"
     tools:context="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SimInfoActivity">
 
     <ScrollView
@@ -190,6 +191,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView">
 
+
+                <com.google.android.ads.nativetemplates.TemplateView
+                    android:id="@+id/my_template"
+                    app:gnt_template_type="@layout/gnt_small_template_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
                 <!--                <car.google.android.ads.nativetemplates.TemplateView-->
                 <!--                    android:id="@+id/my_storage_template"-->
                 <!--                    android:layout_width="match_parent"-->
@@ -203,10 +211,6 @@
                 <!--                    app:layout_constraintStart_toStartOf="parent"-->
                 <!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
-
-                <include layout="@layout/native_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -392,7 +396,18 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" >
+
+
+        <FrameLayout
+            android:id="@+id/ad_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true" />
+    </LinearLayout>
+
+
 
 <!--    <LinearLayout-->
 <!--        android:id="@+id/banner_ad_view"-->

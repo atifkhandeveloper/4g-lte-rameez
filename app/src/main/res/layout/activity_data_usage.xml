@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/purple"
     tools:context="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.DataUsageActivity">
 
     <include
@@ -29,6 +30,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <com.google.android.ads.nativetemplates.TemplateView
+            android:id="@+id/my_template"
+            app:gnt_template_type="@layout/gnt_small_template_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <!--                <car.google.android.ads.nativetemplates.TemplateView-->
         <!--                    android:id="@+id/my_storage_template"-->
         <!--                    android:layout_width="match_parent"-->
@@ -43,9 +50,7 @@
         <!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
 
-        <include layout="@layout/native_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -98,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/full_month_data_usages"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
 

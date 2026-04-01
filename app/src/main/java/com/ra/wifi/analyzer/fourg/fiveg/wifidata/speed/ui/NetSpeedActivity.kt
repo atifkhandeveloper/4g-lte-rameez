@@ -3,6 +3,8 @@ package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
@@ -17,6 +19,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityNetSpeedBinding
@@ -26,8 +33,6 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.Intrestitial_Utis.MyInterstitialController
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.NativeAdPair
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadNativeAds
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.CollapsibleBanner
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.GetSpeedTestHostsHandler
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.HttpDownloadTest
@@ -67,19 +72,9 @@ class NetSpeedActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
 
 //        nativeAds()
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(
-            config.isAdEnable(ConfigParam.NATIVE_NET_SPEED),
-            this,
-            window.decorView.rootView,
-            nativeAdId
-        )
-        CollapsibleBanner.loadBanner(
-            this,
-            binding.bannerContainer,
-            config.isAdEnable(ConfigParam.BANNER_NET_SPEED)
-        )
+
 //        loadNativeAd()
+        loadnative()
         binding.toolBar.backBtn.setOnClickListener { onBackPressed() }
         binding.toolBar.removeAdsbtn.visibility = View.GONE
         handler = Handler(Looper.getMainLooper()) // Initialize the handler
@@ -444,7 +439,7 @@ class NetSpeedActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
             }
 
             AppCompatDelegate.MODE_NIGHT_NO -> {
-                binding.toolBar.title.setTextColor(resources.getColor(R.color.black))
+//                binding.toolBar.title.setTextColor(resources.getColor(R.color.black))
             }
 
             else -> {
@@ -516,5 +511,30 @@ class NetSpeedActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    private fun loadnative() {
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
     }
 }

@@ -3,6 +3,8 @@ package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -10,13 +12,17 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.viewpager.widget.ViewPager
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.FirebaseAds.AdmobAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adapters.ImageSliderAdapter
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityHowtoUseBinding
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 
 class HowtoUseActivity : BaseActivity() {
@@ -40,14 +46,9 @@ class HowtoUseActivity : BaseActivity() {
         binding = ActivityHowtoUseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(
-            config.isAdEnable(ConfigParam.NATIVE_HOW_TO_USE),
-            this,
-            window.decorView.rootView,
-            nativeAdId
-        )
 
+
+        loadnative()
 //        nativeAds()
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)
 
@@ -136,9 +137,9 @@ class HowtoUseActivity : BaseActivity() {
 
             }
 
-            AppCompatDelegate.MODE_NIGHT_NO -> {
-
-            }
+//            AppCompatDelegate.MODE_NIGHT_NO -> {
+//
+//            }
 
             else -> {
             }
@@ -148,6 +149,32 @@ class HowtoUseActivity : BaseActivity() {
 
     fun getItem(i: Int): Int {
         return mViewPager.currentItem
+    }
+
+
+    private fun loadnative(){
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
     }
 
 }

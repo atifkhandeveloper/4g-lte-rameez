@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/purple"
     tools:context="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SignalStrengthActivity">
 
     <!--    <FrameLayout-->
@@ -43,10 +44,7 @@
         <!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
 
-        <include
-            layout="@layout/native_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -137,7 +135,7 @@
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
                 android:text="@string/sim2Sg"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="@dimen/_12ssp"
                 app:layout_constraintEnd_toEndOf="@id/pointerSpeedometerTwo"
                 app:layout_constraintStart_toStartOf="@id/pointerSpeedometerTwo"
@@ -152,7 +150,7 @@
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
                 android:text="@string/sim2Sg"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="@dimen/_12ssp"
                 app:layout_constraintEnd_toEndOf="@id/pointerSpeedometerText"
                 app:layout_constraintStart_toStartOf="@id/pointerSpeedometerText"
@@ -172,7 +170,16 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" >
+
+
+        <com.google.android.ads.nativetemplates.TemplateView
+            android:id="@+id/my_template"
+            app:gnt_template_type="@layout/gnt_small_template_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
 
 <!--    <LinearLayout-->
 <!--        android:id="@+id/banner_ad_view"-->

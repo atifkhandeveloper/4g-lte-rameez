@@ -350,9 +350,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_okBtn">
 
-                <include layout="@layout/native_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

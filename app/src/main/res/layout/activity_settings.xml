@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/purple"
     tools:context="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SettingsActivity">
 
     <ScrollView
@@ -62,9 +63,7 @@
                 <!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
 
-                <include layout="@layout/native_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -142,6 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_44sdp"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:visibility="gone"
                     android:background="@drawable/setting_item_selector">
 
                     <TextView
@@ -350,7 +350,18 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" >
+
+
+        <com.google.android.ads.nativetemplates.TemplateView
+            android:id="@+id/my_template"
+            app:gnt_template_type="@layout/gnt_small_template_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+
+
 
 <!--    <LinearLayout-->
 <!--        android:id="@+id/banner_ad_view"-->

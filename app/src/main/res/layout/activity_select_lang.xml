@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/purple"
     tools:context="com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SelectLangActivity">
 
     <include
@@ -97,7 +98,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/afrikaans"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/afrecianLanR"
@@ -142,7 +143,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/chines"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/chineLanR"
@@ -187,7 +188,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/english"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/defaulR"
@@ -232,7 +233,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/hindi"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/indianLangR"
@@ -277,7 +278,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/indonesian"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/ivIndonesian"
@@ -323,7 +324,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/italian"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/itlianLaR"
@@ -368,7 +369,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/japanese"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/ivJapaneseRadio"
@@ -413,7 +414,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/korean"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/ivKoreanRadio"
@@ -458,7 +459,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/malay"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/ivMalayRadio"
@@ -503,7 +504,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/spanish"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/spanishR"
@@ -548,7 +549,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="@string/vietnamese"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/ivVietnameseRadio"
@@ -601,10 +602,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <include
-            layout="@layout/native_layout"
+        <com.google.android.ads.nativetemplates.TemplateView
+            android:id="@+id/my_template"
+            app:gnt_template_type="@layout/gnt_small_template_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -634,5 +638,7 @@
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
 <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,16 +8,15 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.gms.ads.MobileAds
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.app.AppDelegate
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySplashBinding
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.InterstitialAdsManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.settings.AppLanguageObj
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.MainActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SelectLangActivity
@@ -45,14 +44,13 @@ class SplashActivity : BaseActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        MobileAds.initialize(this)
 
         appLanguage.checkApp(this)
 
         appUpdateManager = AppUpdateManagerFactory.create(this)
         checkForAppUpdate()
 
-        applyDarkMode()
+//        applyDarkMode()
 
         incrementLaunchCount()
 
@@ -87,18 +85,30 @@ class SplashActivity : BaseActivity() {
     // ----------------------------
 
     private fun loadSplashAd() {
-        if (config.isAdEnable(ConfigParam.INTER_SPLASH)) {
-            InterstitialAdsManager.getInstance()
-                .loadAdmobInterstitialSplash(this)
-        }
+
     }
 
     private fun showSplashAdThenNavigate() {
-        InterstitialAdsManager.getInstance()
-            .showAdmobInterstitialSplash(this@SplashActivity) {
-                startNextActivity()
-            }
+
+
+        (application as AppDelegate).showAdIfAvailable(
+            this@SplashActivity,
+            object : AppDelegate.OnShowAdCompleteListener {
+                override fun onShowAdComplete() {
+                    // Check if the consent form is currently on screen before moving to the main
+                    // activity.
+                    startNextActivity()
+
+
+                }
+            },
+        )
     }
+
+
+
+
+
 
     // ----------------------------
     // Navigation Logic
@@ -143,14 +153,14 @@ class SplashActivity : BaseActivity() {
     // Dark Mode
     // ----------------------------
 
-    private fun applyDarkMode() {
-        val savedMode = sharedPreferences.getInt(
-            "MODE",
-            AppCompatDelegate.MODE_NIGHT_YES
-        )
-
-        AppCompatDelegate.setDefaultNightMode(savedMode)
-    }
+//    private fun applyDarkMode() {
+//        val savedMode = sharedPreferences.getInt(
+//            "MODE",
+//            AppCompatDelegate.MODE_NIGHT_YES
+//        )
+//
+//        AppCompatDelegate.setDefaultNightMode(savedMode)
+//    }
 
     // ----------------------------
     // In-App Update

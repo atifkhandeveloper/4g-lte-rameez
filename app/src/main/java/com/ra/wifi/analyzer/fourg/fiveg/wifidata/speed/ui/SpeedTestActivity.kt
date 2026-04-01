@@ -2,7 +2,9 @@ package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +12,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySpeedTestBinding
@@ -18,7 +25,6 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySpeed
 //import com.daimajia.androidanimations.library.YoYo
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.features.newScreen
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 
 class SpeedTestActivity : BaseActivity() {
@@ -34,8 +40,6 @@ class SpeedTestActivity : BaseActivity() {
         binding= ActivitySpeedTestBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(   config.isAdEnable(ConfigParam.NATIVE_SPEED_TEST),this, window.decorView.rootView, nativeAdId)
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)
 
 //        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -43,6 +47,7 @@ class SpeedTestActivity : BaseActivity() {
         goSeedTest()
         toolBar()
         darkMode()
+        loadnative()
 //        loadNativeAd()
 //        nativeAds()
 
@@ -84,14 +89,14 @@ class SpeedTestActivity : BaseActivity() {
                 binding.ipImg.setColorFilter(getColor(R.color.white), PorterDuff.Mode.SRC_IN)
 
             }
-            AppCompatDelegate.MODE_NIGHT_NO -> {
-                binding.textView2.setTextColor(resources.getColor(R.color.black))
-                binding.toolBar.title.setTextColor(resources.getColor(R.color.black))
-                binding.serverTxt.setTextColor(resources.getColor(R.color.black))
-                binding.ipTxt.setTextColor(resources.getColor(R.color.black))
-                binding.serverImg.setColorFilter(getColor(R.color.black), PorterDuff.Mode.SRC_IN)
-                binding.ipImg.setColorFilter(getColor(R.color.black), PorterDuff.Mode.SRC_IN)
-            }
+//            AppCompatDelegate.MODE_NIGHT_NO -> {
+//                binding.textView2.setTextColor(resources.getColor(R.color.white))
+//                binding.toolBar.title.setTextColor(resources.getColor(R.color.white))
+//                binding.serverTxt.setTextColor(resources.getColor(R.color.black))
+//                binding.ipTxt.setTextColor(resources.getColor(R.color.black))
+//                binding.serverImg.setColorFilter(getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+//                binding.ipImg.setColorFilter(getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+//            }
             else -> {
             }
         }
@@ -101,6 +106,31 @@ class SpeedTestActivity : BaseActivity() {
 
         binding.toolBar.removeAdsbtn.visibility=View.GONE
         binding.toolBar.backBtn.setOnClickListener { onBackPressed() }
+    }
+
+    private fun loadnative() {
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
     }
 
 //    private fun goSeedTest() {

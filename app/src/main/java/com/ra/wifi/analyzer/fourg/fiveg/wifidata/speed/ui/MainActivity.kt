@@ -2,11 +2,16 @@ package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -16,20 +21,27 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.features.newScreen
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.CollapsibleBanner
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.InterstitialAdsManager
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.settings.AppLanguageObj
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.NewScreen
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.Setting
-import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityMainBinding
+import kotlin.random.Random
 
 class MainActivity : BaseActivity() {
 
@@ -39,45 +51,24 @@ class MainActivity : BaseActivity() {
     private var isFirstTime = true
     private var lastAdShownTime = 0L
     private var pendingAction: (() -> Unit)? = null
-    private var mInterstitialAd: InterstitialAd? = null
     private var exitFragmentContainer: ConstraintLayout? = null
 
     var fragmentManager: FragmentManager? = null
+    private var interstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         //  initEvent()
-        if (config.isAdEnable(ConfigParam.INTER_HOME))
-            InterstitialAdsManager.getInstance().loadAdmobInterstitialExit(this@MainActivity)
-//        NativeAdsManager.CheckNative(this, window.decorView.rootView)
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(
-            config.isAdEnable(ConfigParam.NATIVE_HOME),
-            this,
-            window.decorView.rootView,
-            nativeAdId
-        )
-        CollapsibleBanner.loadBanner(
-            this,
-            binding.bannerContainer,
-            config.isAdEnable(ConfigParam.BANNER_HOME)
-        )
+
 //        NativeAdsManager.CheckNative(this,window.decorView.rootView)
         fragmentManager = supportFragmentManager
 
-        if (!Setting.isSubActivated){
-            binding.preIconeBtn.visibility = View.VISIBLE
-        }else{
-            binding.preIconeBtn.visibility = View.GONE
-        }
 
-        binding.preIconeBtn.setOnClickListener{
-            NewScreen.start(this, PurchaseActivity::class.java)
-            finish()
-        }
-
+        loadnative()
+        loadAd()
 
         // Initialize the Mobile Ads SDK.
         sharedPreferences = getSharedPreferences("Myrehgffs", Context.MODE_PRIVATE)
@@ -108,93 +99,40 @@ class MainActivity : BaseActivity() {
             AppCompatDelegate.MODE_NIGHT_YES -> {
                 binding.settingsIconeBtn.setImageResource(R.drawable.settingsicone_white)
                 binding.moonIconeBtn.setImageResource(R.drawable.baseline_dark_mode_24)
-                binding.fourGTitleLte.setTextColor(resources.getColor(R.color.white))
-//                binding.spped.setTextColor(resources.getColor(R.color.white))
-//                binding.sped.setTextColor(resources.getColor(R.color.white))
-//                binding.ped.setTextColor(resources.getColor(R.color.white))
-//                binding.pd.setTextColor(resources.getColor(R.color.white))
-//                binding.spped.visibility = View.GONE
-//                binding.sped.visibility = View.GONE
-//                binding.ped.visibility = View.GONE
-//                binding.pd.visibility = View.GONE
-//                binding.speedIconeWh.visibility = View.GONE
-//                binding.speedionceW.visibility = View.GONE
-//                binding.dataUsW.visibility = View.GONE
-//                binding.dataUsX.visibility = View.GONE
-//                binding.dataUsageWhIcone.visibility = View.GONE
-//                binding.signalWIonce.visibility = View.GONE
-//                binding.signalWhIcone.visibility = View.GONE
-//                binding.simInfoIonceW.visibility = View.GONE
-//                binding.simInfoWhIcone.visibility = View.GONE
-//                binding.darkImage.visibility = View.VISIBLE
-//                binding.speedDarkTv.visibility = View.VISIBLE
-//                binding.dataUsageDarkIm.visibility = View.VISIBLE
-//                binding.dataDarkTv.visibility = View.VISIBLE
-//                binding.signalDarkIm.visibility = View.VISIBLE
-//                binding.signalDarkTv.visibility = View.VISIBLE
-//                binding.siminfokTv.visibility = View.VISIBLE
-//                binding.siminfoDarkIm.visibility = View.VISIBLE
+                binding.fourGTitleLte.setTextColor(resources.getColor(R.color.black))
+//
                 binding.clHowToUse.setBackgroundResource(R.drawable.round_shape_dark)
                 binding.settinngs.setBackgroundResource(R.drawable.round_shape_dark)
                 binding.spped.setBackgroundResource(R.drawable.round_shape_dark)
                 binding.sped.setBackgroundResource(R.drawable.round_shape_dark)
                 binding.ped.setBackgroundResource(R.drawable.round_shape_dark)
                 binding.pd.setBackgroundResource(R.drawable.round_shape_dark)
-//                binding.howImg.visibility = View.GONE
-//                binding.settinngs.visibility = View.GONE
-//                binding.lteWIc.visibility = View.GONE
-//                binding.lteWIcone.visibility = View.GONE
-//                binding.lteDark.visibility = View.VISIBLE
-//                binding.lteDarkkTv.visibility = View.VISIBLE
-                binding.howtoUseBtn.setTextColor(resources.getColor(R.color.white))
-                binding.ping4g.setTextColor(resources.getColor(R.color.white))
-                binding.settinngs.setTextColor(resources.getColor(R.color.white))
-                binding.spped.setTextColor(resources.getColor(R.color.white))
-                binding.sped.setTextColor(resources.getColor(R.color.white))
-                binding.ped.setTextColor(resources.getColor(R.color.white))
-                binding.pd.setTextColor(resources.getColor(R.color.white))
+
+                binding.howtoUseBtn.setTextColor(resources.getColor(R.color.black))
+                binding.ping4g.setTextColor(resources.getColor(R.color.black))
+                binding.settinngs.setTextColor(resources.getColor(R.color.black))
+                binding.spped.setTextColor(resources.getColor(R.color.black))
+                binding.sped.setTextColor(resources.getColor(R.color.black))
+                binding.ped.setTextColor(resources.getColor(R.color.black))
+                binding.pd.setTextColor(resources.getColor(R.color.black))
 
             }
 
-            AppCompatDelegate.MODE_NIGHT_NO -> {
-                binding.howtoUseBtn.setTextColor(resources.getColor(R.color.lightTextC))
-                binding.clHowToUse.setBackgroundResource(R.drawable.roundedcgreen)
-                binding.fourGTitleLte.setTextColor(resources.getColor(R.color.black))
-                binding.settingsIconeBtn.setImageResource(R.drawable.settingsicone)
-                binding.moonIconeBtn.setImageResource(R.drawable.moonicone)
-                binding.settinngs.setTextColor(resources.getColor(R.color.lightTextC))
-                binding.spped.setTextColor(resources.getColor(R.color.lightTextC))
-                binding.sped.setTextColor(resources.getColor(R.color.lightTextC))
-                binding.ped.setTextColor(resources.getColor(R.color.lightTextC))
-                binding.pd.setTextColor(resources.getColor(R.color.lightTextC))
-//                binding.spped.visibility = View.VISIBLE
-//                binding.sped.visibility = View.VISIBLE
-//                binding.ped.visibility = View.VISIBLE
-//                binding.pd.visibility = View.VISIBLE
-//                binding.speedIconeWh.visibility = View.VISIBLE
-//                binding.speedionceW.visibility = View.VISIBLE
-//                binding.dataUsW.visibility = View.VISIBLE
-//                binding.dataUsX.visibility = View.VISIBLE
-//                binding.dataUsageWhIcone.visibility = View.VISIBLE
-//                binding.signalWIonce.visibility = View.VISIBLE
-//                binding.signalWhIcone.visibility = View.VISIBLE
-//                binding.simInfoIonceW.visibility = View.VISIBLE
-//                binding.simInfoWhIcone.visibility = View.VISIBLE
-//                binding.darkImage.visibility = View.GONE
-//                binding.speedDarkTv.visibility = View.GONE
-//                binding.dataUsageDarkIm.visibility = View.GONE
-//                binding.dataDarkTv.visibility = View.GONE
-//                binding.signalDarkIm.visibility = View.GONE
-//                binding.signalDarkTv.visibility = View.GONE
-//                binding.siminfokTv.visibility = View.GONE
-//                binding.siminfoDarkIm.visibility = View.GONE
-                binding.clHowToUse.setBackgroundResource(R.drawable.roundedc)
-//                binding.settinngs.visibility = View.VISIBLE
-//                binding.lteWIc.visibility = View.VISIBLE
-//                binding.lteWIcone.visibility = View.VISIBLE
-//                binding.lteDark.visibility = View.GONE
-//                binding.lteDarkkTv.visibility = View.GONE
-            }
+//            AppCompatDelegate.MODE_NIGHT_NO -> {
+//                binding.howtoUseBtn.setTextColor(resources.getColor(R.color.lightTextC))
+//                binding.clHowToUse.setBackgroundResource(R.drawable.roundedcgreen)
+//                binding.fourGTitleLte.setTextColor(resources.getColor(R.color.black))
+//                binding.settingsIconeBtn.setImageResource(R.drawable.settingsicone)
+//                binding.moonIconeBtn.setImageResource(R.drawable.moonicone)
+//                binding.settinngs.setTextColor(resources.getColor(R.color.lightTextC))
+//                binding.spped.setTextColor(resources.getColor(R.color.lightTextC))
+//                binding.sped.setTextColor(resources.getColor(R.color.lightTextC))
+//                binding.ped.setTextColor(resources.getColor(R.color.lightTextC))
+//                binding.pd.setTextColor(resources.getColor(R.color.lightTextC))
+//
+//                binding.clHowToUse.setBackgroundResource(R.drawable.roundedc)
+////
+//            }
 
             else -> {
             }
@@ -212,152 +150,16 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun buttonClicks() {
-        binding.clHowToUse.setOnClickListener {
-            InterstitialAdsManager.getInstance().showAdmobInterstitialInternal(
-                config.isAdEnable(ConfigParam.INTER_HOME),
-                this@MainActivity
-            ) {
-                newScreen(HowtoUseActivity::class.java)
-            }
-
-//            NativeAdsManager.CheckInitlimit(this, object : onAdShowed {
-//                override fun onAdShow() {
-//                    // Code to execute when the ad is shown
-//                    newScreen(HowtoUseActivity::class.java)
-//                }
-//            })
-
-//            MyInterstitialController.getInstance().showInterstitial(this) {
-//                newScreen(HowtoUseActivity::class.java)
-//            }
-        }
-//        binding.noAdsBtn.visibility = View.GONE
-        binding.settingsIconeBtn.setOnClickListener {
-            NewScreen.start(this, SettingsActivity::class.java)
-        }
-        binding.settingLayoutBtn.setOnClickListener {
-            InterstitialAdsManager.getInstance().showAdmobInterstitialInternal(
-                config.isAdEnable(ConfigParam.INTER_HOME),
-                this@MainActivity
-            ) {
-                newScreen(LteSettingsActivity::class.java)
-            }
-
-//            NativeAdsManager.CheckInitlimit(this, object : onAdShowed {
-//                override fun onAdShow() {
-//                    // Code to execute when the ad is shown
-//                    newScreen(LteSettingsActivity::class.java)
-//                }
-//            })
-
-//            MyInterstitialController.getInstance().showInterstitial(this) {
-//                NewScreen.start(this, LteSettingsActivity::class.java)
-//            }
-
-        }
-        binding.dataUsageBtn.setOnClickListener {
-            InterstitialAdsManager.getInstance().showAdmobInterstitialInternal(
-                config.isAdEnable(ConfigParam.INTER_HOME),
-                this@MainActivity
-            ) {
-                newScreen(DataUsageActivity::class.java)
-            }
-
-//            NativeAdsManager.CheckInitlimit(this, object : onAdShowed {
-//                override fun onAdShow() {
-//                    // Code to execute when the ad is shown
-//                    newScreen(DataUsageActivity::class.java)
-//                }
-//            })
-
-//            MyInterstitialController.getInstance().showInterstitial(this) {
-//                NewScreen.start(this, DataUsageActivity::class.java)
-//            }
-
-        }
-        binding.speedTestBtn.setOnClickListener {
-            InterstitialAdsManager.getInstance().showAdmobInterstitialInternal(
-                config.isAdEnable(ConfigParam.INTER_HOME),
-                this@MainActivity
-            ) {
-                newScreen(SpeedTestActivity::class.java)
-            }
-
-//            NativeAdsManager.CheckInitlimit(this, object : onAdShowed {
-//                override fun onAdShow() {
-//                    // Code to execute when the ad is shown
-//                    newScreen(SpeedTestActivity::class.java)
-//                }
-//            })
-
-//            MyInterstitialController.getInstance().showInterstitial(this) {
-//                NewScreen.start(this, SpeedTestActivity::class.java)
-//            }
-
-        }
-        binding.simInfoBtn.setOnClickListener {
-            InterstitialAdsManager.getInstance().showAdmobInterstitialInternal(
-                config.isAdEnable(ConfigParam.INTER_HOME),
-                this@MainActivity
-            ) {
-                newScreen(SimInfoActivity::class.java)
-            }
-
-//            NativeAdsManager.CheckInitlimit(this, object : onAdShowed {
-//                override fun onAdShow() {
-//                    // Code to execute when the ad is shown
-//                    newScreen(SimInfoActivity::class.java)
-//                }
-//            })
-
-//            MyInterstitialController.getInstance().showInterstitial(this) {
-//                NewScreen.start(this, SimInfoActivity::class.java)
-//            }
-
-        }
-        binding.signalSrengthBtn.setOnClickListener {
-            InterstitialAdsManager.getInstance().showAdmobInterstitialInternal(
-                config.isAdEnable(ConfigParam.INTER_HOME),
-                this@MainActivity
-            ) {
-                newScreen(SignalStrengthActivity::class.java)
-            }
-
-//            NativeAdsManager.CheckInitlimit(this, object : onAdShowed {
-//                override fun onAdShow() {
-//                    // Code to execute when the ad is shown
-//                    newScreen(SignalStrengthActivity::class.java)
-//                }
-//            })
-
-//            MyInterstitialController.getInstance().showInterstitial(this) {
-//                NewScreen.start(this, SignalStrengthActivity::class.java)
-//            }
-
-        }
-    }
 
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
 //        MyInterstitialControllerExitBtn.getInstance().showInterstitial(this) {
 //                newScreen(HowtoUseActivity::class.java)
 //                showBottomSheetDialog()
-        InterstitialAdsManager.getInstance().showAdmobInterstitialExit(this@MainActivity) {
-            showExitDialog()
-        }
-
-//        AdmanagerAdsExit.CheckInitlimit(this, object : onAdShowed {
-//            override fun onAdShow() {
-//                // Code to execute when the ad is shown
-////                newScreen(SignalStrengthActivity::class.java)
-//                showExitDialog()
-//            }
-//        })
+        showExitDialog()
 
 
-//            showExitDialog()
-//        }
+
     }
 
     private fun showExitDialog() {
@@ -370,17 +172,10 @@ class MainActivity : BaseActivity() {
             .setCancelable(true)
             .create()
 
-        // Load and display native ad
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(
-            config.isAdEnable(ConfigParam.NATIVE_EXIT),
-            this,
-            dialogView,
-            nativeAdId
-        )
+
 
         dialogView.findViewById<ConstraintLayout>(R.id.speedTestBtn).setOnClickListener {
-            NewScreen.start(this, SpeedTestActivity::class.java)
+            interstitialAd?.show(this)
         }
 
         dialogView.findViewById<ConstraintLayout>(R.id.dataUsageBtn).setOnClickListener {
@@ -407,61 +202,33 @@ class MainActivity : BaseActivity() {
         dialog.show()
     }
 
+    private fun loadnative() {
 
-//    private fun showExitDialog() {
-//        val dialogView = LayoutInflater.from(this).inflate(R.layout.exit_dialog_new, null)
-//        val dialog = AlertDialog.Builder(
-//            this,
-//            android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen
-//        )
-//            .setView(dialogView)
-//            .setCancelable(true)
-//            .create()
-//
-//        val nativeAdId = getString(R.string.how_to_use_native) // Your Native Ad ID
-//        NativeAdsManager.CheckNative(this, window.decorView.rootView, nativeAdId)
-//
-////        MobileAds.initialize(this@MainActivity)
-////        val adLoader = AdLoader.Builder(this@MainActivity, getString(R.string.exit_native))
-////            .forNativeAd { nativeAd ->
-////                val styles = NativeTemplateStyle.Builder()
-////                    .withMainBackgroundColor(ColorDrawable(Color.parseColor("#EFEDED")))
-////                    .build()
-////                val template = dialogView.findViewById<TemplateView>(R.id.my_storage_template)
-////                template.setStyles(styles)
-////                template.setNativeAd(nativeAd)
-////                template.visibility = View.VISIBLE
-////            }
-////            .build()
-////        adLoader.loadAd(AdRequest.Builder().build())
-//
-//        dialogView.findViewById<ConstraintLayout>(R.id.speedTestBtn).setOnClickListener {
-//            NewScreen.start(this, SpeedTestActivity::class.java)
-//        }
-//
-//        dialogView.findViewById<ConstraintLayout>(R.id.dataUsageBtn).setOnClickListener {
-//            NewScreen.start(this, DataUsageActivity::class.java)
-//        }
-//
-//        dialogView.findViewById<ConstraintLayout>(R.id.signalSrengthBtn).setOnClickListener {
-//            NewScreen.start(this, SignalStrengthActivity::class.java)
-//        }
-//
-//        dialogView.findViewById<ConstraintLayout>(R.id.simInfoBtn).setOnClickListener {
-//            NewScreen.start(this, SimInfoActivity::class.java)
-//        }
-//
-//        dialogView.findViewById<TextView>(R.id.tv_cancelBtn).setOnClickListener {
-//            dialog.dismiss()
-//        }
-//
-//        dialogView.findViewById<TextView>(R.id.tv_okBtn).setOnClickListener {
-//            dialog.dismiss()
-//            finishAffinity()
-//        }
-//
-//        dialog.show()
-//    }
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+
+
 
     private fun replaceFragment(fragment: Fragment) {
         val transaction = fragmentManager!!.beginTransaction()
@@ -469,4 +236,166 @@ class MainActivity : BaseActivity() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
+    private fun loadAd() {
+        // Request a new ad if one isn't already loaded.
+
+
+        // [START load_ad]
+        InterstitialAd.load(
+            this,
+            resources.getString(R.string.inter),
+            AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    Log.d(TAG, "Ad was loaded.")
+                    interstitialAd = ad
+                    // [START_EXCLUDE silent]
+                    // [END_EXCLUDE]
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d(TAG, adError.message)
+                    interstitialAd = null
+                    // [START_EXCLUDE silent]
+                    val error =
+                        "domain: ${adError.domain}, code: ${adError.code}, " + "message: ${adError.message}"
+
+                    // [END_EXCLUDE]
+                }
+            },
+        )
+        // [END load_ad]
+    }
+
+    private fun showInterstitial() {
+        if (interstitialAd != null) {
+            // [START set_fullscreen_callback]
+            interstitialAd?.fullScreenContentCallback =
+                object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        // Called when fullscreen content is dismissed.
+                        Log.d(TAG, "Ad was dismissed.")
+                        val intent = Intent(this@MainActivity, HowtoUseActivity::class.java)
+                        startActivity(intent)
+                        loadAd()
+                        // Don't forget to set the ad reference to null so you
+                        // don't show the ad a second time.
+                        interstitialAd = null
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        // Called when fullscreen content failed to show.
+                        Log.d(TAG, "Ad failed to show.")
+                        val intent = Intent(this@MainActivity, HowtoUseActivity::class.java)
+                        startActivity(intent)
+                        loadAd()
+                        // Don't forget to set the ad reference to null so you
+                        // don't show the ad a second time.
+                        interstitialAd = null
+                    }
+
+                    override fun onAdShowedFullScreenContent() {
+                        // Called when fullscreen content is shown.
+                        Log.d(TAG, "Ad showed fullscreen content.")
+                    }
+
+                    override fun onAdImpression() {
+                        // Called when an impression is recorded for an ad.
+                        Log.d(TAG, "Ad recorded an impression.")
+                    }
+
+                    override fun onAdClicked() {
+                        // Called when ad is clicked.
+                        Log.d(TAG, "Ad was clicked.")
+                    }
+                }
+            // [END set_fullscreen_callback]
+
+            // [START show_ad]
+            interstitialAd?.show(this)
+            // [END show_ad]
+        } else {
+            loadAd()
+        }
+
+
+    }
+
+
+    private fun showAdWithRandom(action: () -> Unit) {
+
+        val randomNumber = Random.nextInt(0, 10) // 0–9
+
+        if (randomNumber < 8 && interstitialAd != null) {
+
+            interstitialAd?.fullScreenContentCallback =
+                object : FullScreenContentCallback() {
+
+                    override fun onAdDismissedFullScreenContent() {
+                        interstitialAd = null
+                        loadAd()
+                        action() // perform button task after ad
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        interstitialAd = null
+                        loadAd()
+                        action() // perform task even if ad fails
+                    }
+                }
+
+            interstitialAd?.show(this)
+
+        } else {
+            action() // directly perform action
+        }
+    }
+
+
+    private fun buttonClicks() {
+
+        binding.clHowToUse.setOnClickListener {
+            showAdWithRandom {
+                newScreen(HowtoUseActivity::class.java)
+            }
+        }
+
+        binding.settingLayoutBtn.setOnClickListener {
+            showAdWithRandom {
+                newScreen(LteSettingsActivity::class.java)
+            }
+        }
+
+        binding.dataUsageBtn.setOnClickListener {
+            showAdWithRandom {
+                newScreen(DataUsageActivity::class.java)
+            }
+        }
+
+        binding.speedTestBtn.setOnClickListener {
+            showAdWithRandom {
+                newScreen(SpeedTestActivity::class.java)
+            }
+        }
+
+        binding.simInfoBtn.setOnClickListener {
+            showAdWithRandom {
+                newScreen(SimInfoActivity::class.java)
+            }
+        }
+
+        binding.signalSrengthBtn.setOnClickListener {
+            showAdWithRandom {
+                newScreen(SignalStrengthActivity::class.java)
+            }
+        }
+
+        binding.settingsIconeBtn.setOnClickListener {
+            showAdWithRandom {
+                NewScreen.start(this, SettingsActivity::class.java)
+            }
+        }
+    }
+
 }

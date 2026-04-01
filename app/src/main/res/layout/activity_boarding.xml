@@ -80,10 +80,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <include
-                layout="@layout/native_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -113,6 +109,12 @@
 <!--                app:layout_constraintTop_toTopOf="parent" />-->
 
 <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+        <com.google.android.ads.nativetemplates.TemplateView
+            android:id="@+id/my_template"
+            app:gnt_template_type="@layout/gnt_small_template_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

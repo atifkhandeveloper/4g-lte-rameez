@@ -79,7 +79,7 @@
             android:fontFamily="@font/poppins"
             android:gravity="center"
             android:text="@string/prT"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/_10ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

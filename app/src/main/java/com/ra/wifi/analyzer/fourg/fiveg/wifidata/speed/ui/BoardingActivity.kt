@@ -1,12 +1,19 @@
 package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 
 import android.content.pm.ActivityInfo
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.viewpager.widget.ViewPager
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.FirebaseAds.AdmobAds
@@ -16,7 +23,6 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.ADUnitPlacements
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.NativeAdPair
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadNativeAds
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.NewScreen
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.SharedPrefObj
@@ -43,15 +49,11 @@ class BoardingActivity : BaseActivity() {
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
+        loadnative()
+
 
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(
-            config.isAdEnable(ConfigParam.NATIVE_BOARDING),
-            this,
-            window.decorView.rootView,
-            nativeAdId
-        )
+
 //        loadNativeAd()
 
         binding.doneBtn.setOnClickListener {
@@ -158,5 +160,31 @@ class BoardingActivity : BaseActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+    }
+
+
+    private fun loadnative() {
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
     }
 }

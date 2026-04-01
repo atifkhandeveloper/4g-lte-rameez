@@ -3,12 +3,19 @@ package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySelectLangBinding
@@ -19,8 +26,6 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySelec
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadNativeAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.features.newScreen
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.InterstitialAdsManager
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.SharedPrefObj
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConstantVariables
@@ -39,8 +44,8 @@ class SelectLangActivity : BaseActivity() {
         binding = ActivitySelectLangBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(   config.isAdEnable(ConfigParam.NATIVE_LANGUAGE),this, window.decorView.rootView, nativeAdId)
+        loadnative()
+
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)
 
         selectLanguage()
@@ -722,14 +727,12 @@ class SelectLangActivity : BaseActivity() {
             SharedPrefObj.saveString(this, ConstantVariables.LANG_KEY, seletedLang)
             setLanguage(seletedLang)
             if (fromSetting) {
-                InterstitialAdsManager.getInstance().showAdmobInterstitialSplash(this@SelectLangActivity) {
+
                     startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
-                }
+
             } else {
-                InterstitialAdsManager.getInstance().showAdmobInterstitialSplash(this@SelectLangActivity) {
                     newScreen(BoardingActivity::class.java)
                     finish()
-                }
 
             }
         }
@@ -743,5 +746,30 @@ class SelectLangActivity : BaseActivity() {
         binding.toolBar.backBtn.visibility = View.GONE
         binding.toolBar.title.text = resources.getString(R.string.settLangT)
 
+    }
+
+    private fun loadnative() {
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
     }
 }

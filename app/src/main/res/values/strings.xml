@@ -3,7 +3,7 @@
 
     <string name="splashT">LET Setting Enjoy Fast Internet</string>
     <string name="prT">This action may contain Ad</string>
-    <string name="letSetting">LTE Setting</string>
+    <string name="letSetting">LTE</string>
     <string name="howtoUser">How to use ?</string>
     <string name="save15">Save 15%</string>
     <string name="rs200">Only Rs: 200</string>
@@ -115,13 +115,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
-    <!--    <string name="native_id">ca-app-pub-3940256099942544/2247696110</string>-->
-    <!--    <string name="native_onboard_id">ca-app-pub-3940256099942544/2247696110</string>-->
-    <!--    <string name="native_home_id">ca-app-pub-3940256099942544/2247696110</string>-->
-    <!--    <string name="native_speed_and_data_usage_id">ca-app-pub-3940256099942544/2247696110</string>-->
-    <!--    <string name="native_signal_and_sim_id">ca-app-pub-3940256099942544/2247696110</string>-->
-    <!--    <string name="native_exit_and_settings_id">ca-app-pub-3940256099942544/2247696110</string>-->
-
 
     <!--    Admob Testing Ads -->
 
@@ -129,6 +122,15 @@
         <string name="bannerId" translatable="false">ca-app-pub-3940256099942544/2014213617</string>
         <string name="opeApp" translatable="false">ca-app-pub-3940256099942544/9257395921</string>
         <string name="nativeId" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
-    <string name="inter" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="inter" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+
+
+    <!--    Admob  Ads -->
+
+<!--    <string name="appId" translatable="false">ca-app-pub-5969006643846426~2952644193</string>-->
+<!--    <string name="bannerId" translatable="false">ca-app-pub-5969006643846426/8273253636</string>-->
+<!--    <string name="opeApp" translatable="false">ca-app-pub-5969006643846426/6960171966</string>-->
+<!--    <string name="nativeId" translatable="false">ca-app-pub-5969006643846426/3021655908</string>-->
+<!--    <string name="inter" translatable="false">ca-app-pub-5969006643846426/6653779150</string>-->
 
 </resources>

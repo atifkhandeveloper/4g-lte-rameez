@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,6 +21,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.FirebaseAds.AdmobAds
@@ -31,8 +38,6 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadCollapseBanner
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadNativeAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.modals.UsagesData
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.CollapsibleBanner
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 import dev.jahidhasanco.networkusage.*
 
@@ -50,24 +55,14 @@ class DataUsageActivity : BaseActivity() {
         setContentView(binding.root)
 
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)
-        CollapsibleBanner.loadBanner(
-            this,
-            binding.bannerContainer,
-            config.isAdEnable(ConfigParam.BANNER_DATA_USAGE)
-        )
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(
-            config.isAdEnable(ConfigParam.NATIVE_DATA_USAGE),
-            this,
-            window.decorView.rootView,
-            nativeAdId
-        )
+
 
         toolBar()
         setupPermissions()
         refreshLayout()
         setupData()
         darkMode()
+        loadnative()
 //        nativeAds()
 //        loadNativeAd()
     }
@@ -113,7 +108,7 @@ class DataUsageActivity : BaseActivity() {
             }
 
             AppCompatDelegate.MODE_NIGHT_NO -> {
-                binding.title.setTextColor(resources.getColor(R.color.black))
+//                binding.title.setTextColor(resources.getColor(R.color.black))
             }
 
             else -> {
@@ -258,5 +253,30 @@ class DataUsageActivity : BaseActivity() {
             binding.swipRefresLayout.isRefreshing = false
 
         }
+    }
+
+    private fun loadnative() {
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
     }
 }

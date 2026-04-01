@@ -4,17 +4,21 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySecondTimeOnlyBinding
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.InterstitialAdsManager
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.AnimationActivity
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.FirebaseAds.AdmobAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.MainActivity
@@ -39,22 +43,18 @@ class SecondTimeOnly : BaseActivity() {
         binding = ActivitySecondTimeOnlyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(
-            config.isAdEnable(ConfigParam.NATIVE_SECOND_TIME),
-            this,
-            window.decorView.rootView,
-            nativeAdId
-        )
+        loadnative()
+
+
 
         binding.nextBtn.setOnClickListener {
             if (counter == 0) {
                 Toast.makeText(this, "Please Select Any Category", Toast.LENGTH_SHORT).show()
             } else {
-                InterstitialAdsManager.getInstance().showAdmobInterstitialSplash(this) {
+
                     startActivity(Intent(this@SecondTimeOnly, AnimationActivity::class.java))
                     finish()
-                }
+
 
             }
         }
@@ -209,6 +209,31 @@ class SecondTimeOnly : BaseActivity() {
                 )
             }
         }
+    }
+
+    private fun loadnative() {
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
     }
 //    private fun showAdNativeBottomMain() {
 //        try {

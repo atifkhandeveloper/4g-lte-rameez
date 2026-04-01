@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -12,6 +14,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySettingsBinding
@@ -26,9 +33,6 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySetti
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadNativeAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.features.newScreen
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.InterstitialAdsManager
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.CollapsibleBanner
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.SharedPrefObj
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConstantVariables
@@ -44,25 +48,14 @@ class SettingsActivity : BaseActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(
-            config.isAdEnable(ConfigParam.NATIVE_SETTINGS),
-            this,
-            window.decorView.rootView,
-            nativeAdId
-        )
-//        NativeAdsManager.CheckNative(this, window.decorView.rootView)
-        CollapsibleBanner.loadBanner(
-            this,
-            binding.bannerContainer,
-            config.isAdEnable(ConfigParam.BANNER_SETTINGS)
-        )
+
 
 //        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         actionBar?.hide()
         sharedPreferences = getSharedPreferences("Myrehgffs", Context.MODE_PRIVATE)
         darkMode()
         toolBar()
+        loadnative()
         binding.appLangBtn.setOnClickListener {
             startActivity(
                 Intent(
@@ -80,7 +73,7 @@ class SettingsActivity : BaseActivity() {
         binding.clPrivacyPolicy.setOnClickListener {
 //            isAppOpenAdShow(false)
             openUrlInBrowser(
-                "https://qappali.blogspot.com/2023/11/privacy-policy-of-4g-lte-only-network.html"
+                "https://sites.google.com/view/fateetech/home"
             )
         }
         binding.clShare.setOnClickListener {
@@ -133,12 +126,9 @@ class SettingsActivity : BaseActivity() {
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
 //        MyInterstitialController.getInstance().showInterstitial(this) {
-        InterstitialAdsManager.getInstance().showAdmobInterstitialInternal(
-            config.isAdEnable(ConfigParam.INTER_SETTINGS),
-            this@SettingsActivity
-        ) {
+
             finish()
-        }
+
 
 //        NativeAdsManager.CheckInitlimit(this, object : onAdShowed {
 //            override fun onAdShow() {
@@ -355,10 +345,6 @@ class SettingsActivity : BaseActivity() {
                 binding.dakrMTv.text = resources.getString(R.string.darkMode)
             }
 
-            AppCompatDelegate.MODE_NIGHT_NO -> {
-                binding.toolBar.title.setTextColor(resources.getColor(R.color.black))
-                binding.dakrMTv.text = resources.getString(R.string.defaultMode)
-            }
 
             else -> {
                 binding.dakrMTv.text = resources.getString(R.string.defaultMode)
@@ -405,5 +391,30 @@ class SettingsActivity : BaseActivity() {
 ////            e.printStackTrace()
 ////        }
 //    }
+
+    private fun loadnative(){
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
 
 }

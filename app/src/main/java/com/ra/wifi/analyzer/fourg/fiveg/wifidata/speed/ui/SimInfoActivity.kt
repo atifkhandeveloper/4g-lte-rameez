@@ -1,18 +1,31 @@
 package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySimInfoBinding
@@ -23,12 +36,12 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.NativeAdPair
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadCollapseBanner
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadNativeAds
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.NativeAdsManager
-import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.new_ads_manager.CollapsibleBanner
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 
 class SimInfoActivity : BaseActivity() {
     private val phoneStatePermissionCode = 101
+    private var adView: AdView? = null
+
     private val sharedPreferences: SharedPreferences by lazy {
         getSharedPreferences("Myrehgffs", Context.MODE_PRIVATE)
     }
@@ -38,19 +51,14 @@ class SimInfoActivity : BaseActivity() {
         binding = ActivitySimInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val nativeAdId = getString(R.string.nativeId) // Your Native Ad ID
-        NativeAdsManager.ReqLoadNativeAd(   config.isAdEnable(ConfigParam.NATIVE_SIM_INFO),this, window.decorView.rootView, nativeAdId)
-//        NativeAdsManager.CheckNative(this, window.decorView.rootView)
-        CollapsibleBanner.loadBanner(
-            this,
-            binding.bannerContainer,
-            config.isAdEnable(ConfigParam.BANNER_SIM_INFO)
-        )
+
 
 
         checkPermission()
         toolBar()
         darkMode()
+        loadnative()
+        loadBanner()
 //        nativeAds()
 //        loadNativeAd()
     }
@@ -82,11 +90,11 @@ class SimInfoActivity : BaseActivity() {
                 binding.sim2.setTextColor(resources.getColor(R.color.green))
             }
 
-            AppCompatDelegate.MODE_NIGHT_NO -> {
-                binding.toolBar.title.setTextColor(resources.getColor(R.color.black))
-                binding.simOne.setTextColor(resources.getColor(R.color.blueC))
-                binding.sim2.setTextColor(resources.getColor(R.color.blueC))
-            }
+//            AppCompatDelegate.MODE_NIGHT_NO -> {
+//                binding.toolBar.title.setTextColor(resources.getColor(R.color.black))
+//                binding.simOne.setTextColor(resources.getColor(R.color.blueC))
+//                binding.sim2.setTextColor(resources.getColor(R.color.blueC))
+//            }
 
             else -> {
             }
@@ -198,5 +206,87 @@ class SimInfoActivity : BaseActivity() {
         if (requestCode == phoneStatePermissionCode && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             getSimDetails()
         }
+    }
+
+    private fun loadnative() {
+
+        MobileAds.initialize(this)
+
+// Optional: set background color
+        val background = ColorDrawable(Color.WHITE)
+
+// Create AdLoader
+        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
+            .forNativeAd { nativeAd ->
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(background)
+                    .build()
+
+                val template = findViewById<TemplateView>(R.id.my_template)
+                template.setStyles(styles)
+                template.setNativeAd(nativeAd)
+            }
+            .build()
+
+// Load Ad
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun loadBanner() {
+        // [START create_ad_view]
+        // Create a new ad view.
+        val adView = AdView(this)
+        adView.adUnitId = resources.getString(R.string.bannerId)
+        // [START set_ad_size]
+        // Request a large anchored adaptive banner with a width of 360.
+        adView.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(this, 360))
+        // [END set_ad_size]
+        this.adView = adView
+
+        // Replace ad container with new ad view.
+        binding.adViewContainer.removeAllViews()
+        binding.adViewContainer.addView(adView)
+        // [END create_ad_view]
+
+        // Listen for ad events.
+        adView.adListener =
+            object : AdListener() {
+                override fun onAdLoaded() {
+                    // Called when an ad is loaded.
+                    Log.d(TAG, "Ad loaded.")
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    // Called when an ad request failed.
+                    Log.i(TAG, "Ad failed to load: ${error.message}")
+                }
+
+                override fun onAdOpened() {
+                    // Called when an ad opens an overlay that covers the screen.
+                    Log.d(TAG, "Ad opened.")
+                }
+
+                override fun onAdClicked() {
+                    // Called when a click is recorded for an ad.
+                    Log.d(TAG, "Ad clicked.")
+                }
+
+                override fun onAdImpression() {
+                    // Called when an impression is recorded for an ad.
+                    Log.d(TAG, "Ad recorded an impression.")
+                }
+
+                override fun onAdClosed() {
+                    // Called when the user is about to return to the application
+                    // after tapping on an ad.
+                    Log.d(TAG, "Ad closed.")
+                }
+            }
+
+        // [START load_ad]
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+        // [END load_ad]
     }
 }
