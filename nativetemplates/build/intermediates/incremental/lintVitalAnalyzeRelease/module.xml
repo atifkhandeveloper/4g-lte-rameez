@@ -1,0 +1,20 @@
+<lint-module
+    format="1"
+    dir="C:\Users\Codo Logix\Desktop\4g-lte-rameez\nativetemplates"
+    name=":nativetemplates"
+    type="LIBRARY"
+    maven="4G Lte Rameez:nativetemplates:unspecified"
+    agpVersion="8.12.3"
+    buildFolder="build"
+    resourcePrefix="gnt_"
+    bootClassPath="C:\Users\Codo Logix\AppData\Local\Android\Sdk\platforms\android-30\android.jar;C:\Users\Codo Logix\AppData\Local\Android\Sdk\build-tools\35.0.0\core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-30"
+    neverShrinking="true">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>
