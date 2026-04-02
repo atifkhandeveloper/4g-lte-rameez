@@ -13,8 +13,8 @@ android {
         applicationId "com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed"
         minSdk 24
         targetSdk 36
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.2"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -132,5 +132,5 @@ dependencies {
     implementation project(':nativetemplates')
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
-    implementation 'com.android.billingclient:billing:5.1.0'
+    implementation 'com.android.billingclient:billing:8.3.0'
 }
