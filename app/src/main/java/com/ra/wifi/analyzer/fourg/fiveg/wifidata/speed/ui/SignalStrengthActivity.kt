@@ -25,6 +25,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySignalStrengthBinding
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.FirebaseAds.AdmobAds
@@ -53,7 +54,11 @@ class SignalStrengthActivity : BaseActivity() {
         actionBar?.hide()
         toolBar()
         darkMode()
-        loadnative()
+
+        if (PremiumManager.shouldShowAds(this)) {
+            loadnative()
+        }
+
 //        loadNativeAd()
 //        nativeAds()
         if (arePermissionsGranted()) {
@@ -280,10 +285,13 @@ class SignalStrengthActivity : BaseActivity() {
 
         MobileAds.initialize(this)
 
-// Optional: set background color
         val background = ColorDrawable(Color.WHITE)
 
-// Create AdLoader
+        val template = findViewById<TemplateView>(R.id.my_template)
+
+        // default hidden until ad loads
+        template.visibility = View.GONE
+
         val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
             .forNativeAd { nativeAd ->
 
@@ -291,13 +299,23 @@ class SignalStrengthActivity : BaseActivity() {
                     .withMainBackgroundColor(background)
                     .build()
 
-                val template = findViewById<TemplateView>(R.id.my_template)
                 template.setStyles(styles)
                 template.setNativeAd(nativeAd)
+
+                // ✅ SHOW when ad is loaded
+                template.visibility = View.VISIBLE
             }
+            .withAdListener(object : com.google.android.gms.ads.AdListener() {
+
+                override fun onAdFailedToLoad(loadAdError: com.google.android.gms.ads.LoadAdError) {
+                    super.onAdFailedToLoad(loadAdError)
+
+                    // ❌ HIDE when ad fails
+                    template.visibility = View.GONE
+                }
+            })
             .build()
 
-// Load Ad
         adLoader.loadAd(AdRequest.Builder().build())
     }
 

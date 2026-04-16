@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.ads.nativetemplates.NativeTemplateStyle
@@ -31,6 +32,8 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.features.newScreen
@@ -40,6 +43,7 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.NewScreen
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.Setting
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityMainBinding
 import kotlin.random.Random
 
@@ -67,8 +71,13 @@ class MainActivity : BaseActivity() {
         fragmentManager = supportFragmentManager
 
 
-        loadnative()
-        loadAd()
+        if (PremiumManager.shouldShowAds(this)) {
+            loadnative()
+            loadAd()
+            binding.pro.visibility = View.VISIBLE
+        }
+
+        showGoogleRateDialog()
 
         // Initialize the Mobile Ads SDK.
         sharedPreferences = getSharedPreferences("Myrehgffs", Context.MODE_PRIVATE)
@@ -153,11 +162,11 @@ class MainActivity : BaseActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
+        onBackPressed()
 //        MyInterstitialControllerExitBtn.getInstance().showInterstitial(this) {
 //                newScreen(HowtoUseActivity::class.java)
 //                showBottomSheetDialog()
-        showExitDialog()
-
+//        showExitDialog()
 
 
     }
@@ -206,10 +215,13 @@ class MainActivity : BaseActivity() {
 
         MobileAds.initialize(this)
 
-// Optional: set background color
         val background = ColorDrawable(Color.WHITE)
 
-// Create AdLoader
+        val template = findViewById<TemplateView>(R.id.my_template)
+
+        // default hidden until ad loads
+        template.visibility = View.GONE
+
         val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
             .forNativeAd { nativeAd ->
 
@@ -217,17 +229,25 @@ class MainActivity : BaseActivity() {
                     .withMainBackgroundColor(background)
                     .build()
 
-                val template = findViewById<TemplateView>(R.id.my_template)
                 template.setStyles(styles)
                 template.setNativeAd(nativeAd)
+
+                // ✅ SHOW when ad is loaded
+                template.visibility = View.VISIBLE
             }
+            .withAdListener(object : com.google.android.gms.ads.AdListener() {
+
+                override fun onAdFailedToLoad(loadAdError: com.google.android.gms.ads.LoadAdError) {
+                    super.onAdFailedToLoad(loadAdError)
+
+                    // ❌ HIDE when ad fails
+                    template.visibility = View.GONE
+                }
+            })
             .build()
 
-// Load Ad
         adLoader.loadAd(AdRequest.Builder().build())
     }
-
-
 
 
     private fun replaceFragment(fragment: Fragment) {
@@ -325,7 +345,13 @@ class MainActivity : BaseActivity() {
 
     private fun showAdWithRandom(action: () -> Unit) {
 
-        val randomNumber = Random.nextInt(0, 10) // 0–9
+        // 🚫 PREMIUM USERS SKIP ADS
+        if (PremiumManager.shouldShowAds(this).not()) {
+            action()
+            return
+        }
+
+        val randomNumber = Random.nextInt(0, 10)
 
         if (randomNumber < 8 && interstitialAd != null) {
 
@@ -335,20 +361,20 @@ class MainActivity : BaseActivity() {
                     override fun onAdDismissedFullScreenContent() {
                         interstitialAd = null
                         loadAd()
-                        action() // perform button task after ad
+                        action()
                     }
 
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                         interstitialAd = null
                         loadAd()
-                        action() // perform task even if ad fails
+                        action()
                     }
                 }
 
             interstitialAd?.show(this)
 
         } else {
-            action() // directly perform action
+            action()
         }
     }
 
@@ -374,14 +400,18 @@ class MainActivity : BaseActivity() {
         }
 
         binding.speedTestBtn.setOnClickListener {
-            showAdWithRandom {
-                newScreen(SpeedTestActivity::class.java)
+            lockFeature {
+                showAdWithRandom {
+                    newScreen(SpeedTestActivity::class.java)
+                }
             }
         }
 
         binding.simInfoBtn.setOnClickListener {
-            showAdWithRandom {
-                newScreen(SimInfoActivity::class.java)
+            lockFeature {
+                showAdWithRandom {
+                    newScreen(SimInfoActivity::class.java)
+                }
             }
         }
 
@@ -394,6 +424,43 @@ class MainActivity : BaseActivity() {
         binding.settingsIconeBtn.setOnClickListener {
             showAdWithRandom {
                 NewScreen.start(this, SettingsActivity::class.java)
+            }
+        }
+        binding.pro.setOnClickListener {
+            startActivity(Intent(this, PremiumActivity::class.java))
+        }
+    }
+
+
+    private fun lockFeature(action: () -> Unit) {
+        if (PremiumManager.isPremium(this)) {
+            action()
+        } else {
+            startActivity(Intent(this, PremiumActivity::class.java))
+        }
+    }
+
+    private fun showGoogleRateDialog() {
+
+        val manager: ReviewManager = ReviewManagerFactory.create(this)
+
+        val request = manager.requestReviewFlow()
+
+        request.addOnCompleteListener { task ->
+
+            if (task.isSuccessful) {
+
+                val reviewInfo = task.result
+
+                val flow = manager.launchReviewFlow(this, reviewInfo)
+
+                flow.addOnCompleteListener {
+                    // Review flow completed (user may or may not submit rating)
+                }
+
+            } else {
+                // Fallback (optional)
+                // openPlayStore()
             }
         }
     }

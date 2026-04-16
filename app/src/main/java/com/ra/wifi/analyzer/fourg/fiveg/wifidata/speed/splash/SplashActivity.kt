@@ -15,10 +15,12 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.app.AppDelegate
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySplashBinding
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.settings.AppLanguageObj
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.MainActivity
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.PremiumActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.SelectLangActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.SharedPrefObj
@@ -54,7 +56,12 @@ class SplashActivity : BaseActivity() {
 
         incrementLaunchCount()
 
-        loadSplashAd()
+        if (PremiumManager.shouldShowAds(this)) {
+            loadSplashAd()
+        }
+
+
+
 
         animateProgressBar()
     }
@@ -90,18 +97,24 @@ class SplashActivity : BaseActivity() {
 
     private fun showSplashAdThenNavigate() {
 
-
         (application as AppDelegate).showAdIfAvailable(
             this@SplashActivity,
             object : AppDelegate.OnShowAdCompleteListener {
+
                 override fun onShowAdComplete() {
-                    // Check if the consent form is currently on screen before moving to the main
-                    // activity.
-                    startNextActivity()
 
+                    // Use Activity context properly
+                    if (PremiumManager.isPremium(this@SplashActivity)) {
+                        startActivity(
+                            Intent(this@SplashActivity, MainActivity::class.java)
+                        )
+                    } else {
+                        startNextActivity()
+                    }
 
+                    finish()
                 }
-            },
+            }
         )
     }
 
@@ -128,7 +141,7 @@ class SplashActivity : BaseActivity() {
 
             else -> {
                 if (SharedPrefObj.getToken(this) != null) {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, PremiumActivity::class.java))
                 } else {
                     startActivity(Intent(this, SelectLangActivity::class.java))
                 }

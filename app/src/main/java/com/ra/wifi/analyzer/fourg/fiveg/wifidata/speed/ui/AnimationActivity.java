@@ -24,6 +24,8 @@ public class AnimationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_animation);
 
+
+
         loadnative();
 
 //        new Handler().postDelayed(new Runnable() {
@@ -41,7 +43,7 @@ public class AnimationActivity extends BaseActivity {
     }
 
     public void GetStarted(View view) {
-        startActivity(new Intent(AnimationActivity.this, MainActivity.class));
+        startActivity(new Intent(AnimationActivity.this, PremiumActivity.class));
         finish();
     }
 

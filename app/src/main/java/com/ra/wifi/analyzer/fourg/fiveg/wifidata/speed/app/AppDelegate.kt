@@ -32,6 +32,8 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.billing.BillingRepository
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import timber.log.Timber
 import java.util.Date
 import java.util.Locale
@@ -49,6 +51,8 @@ class AppDelegate : LocalizationApplication(), ActivityLifecycleCallbacks,
 
     override fun onCreate() {
         super<LocalizationApplication>.onCreate()
+
+        BillingRepository.init(this)
         FirebaseApp.initializeApp(this)
         config = FirebaseRemoteConfig.getInstance()
         appClassIns = this
@@ -69,7 +73,11 @@ class AppDelegate : LocalizationApplication(), ActivityLifecycleCallbacks,
         setNotificationChannels()
 
         registerActivityLifecycleCallbacks(this)
-        appOpenAdManager = AppOpenAdManager()
+
+        if (PremiumManager.shouldShowAds(this)) {
+            appOpenAdManager = AppOpenAdManager()
+        }
+
     }
 
     private fun setNotificationChannels() {
