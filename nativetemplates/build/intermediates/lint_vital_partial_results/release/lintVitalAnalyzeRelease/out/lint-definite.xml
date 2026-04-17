@@ -9,10 +9,10 @@
             file="${:nativetemplates*release*MAIN*sourceProvider*0*resDir*0}/values/attrs.xml"
             line="4"
             column="22"
-            startOffset="35"
+            startOffset="38"
             endLine="4"
             endColumn="41"
-            endOffset="54"/>
+            endOffset="57"/>
     </incident>
 
     <incident
@@ -23,10 +23,10 @@
             file="${:nativetemplates*projectDir}/build.gradle"
             line="9"
             column="9"
-            startOffset="181"
+            startOffset="189"
             endLine="9"
             endColumn="28"
-            endOffset="200"/>
+            endOffset="208"/>
     </incident>
 
 </incidents>

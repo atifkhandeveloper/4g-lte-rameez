@@ -2,11 +2,10 @@ package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import com.android.billingclient.api.*
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
-
-
 
 object BillingRepository : PurchasesUpdatedListener {
 
@@ -29,11 +28,6 @@ object BillingRepository : PurchasesUpdatedListener {
         premiumCallback = onPremiumUnlocked
         plansCallback = onReady
 
-        if (::billingClient.isInitialized && isConnected) {
-            onReady?.invoke()
-            return
-        }
-
         billingClient = BillingClient.newBuilder(appContext)
             .enablePendingPurchases(
                 PendingPurchasesParams.newBuilder()
@@ -53,8 +47,6 @@ object BillingRepository : PurchasesUpdatedListener {
 
                     loadAllProducts()
                     restorePurchases(appContext)
-                } else {
-                    Log.e("BILLING", "Setup failed: ${result.debugMessage}")
                 }
             }
 
@@ -77,19 +69,9 @@ object BillingRepository : PurchasesUpdatedListener {
         )
 
         queryProducts(subs) { subList ->
-
             queryProducts(inApp) { inAppList ->
 
-                cachedPlans = (subList + inAppList).sortedBy {
-                    when (it.id) {
-                        "weekly_fourg" -> 0
-                        "monthly_subscription" -> 1
-                        "lifetime" -> 2
-                        else -> 99
-                    }
-                }
-
-                Log.d("BILLING", "Plans Loaded: ${cachedPlans.size}")
+                cachedPlans = (subList + inAppList)
 
                 plansCallback?.invoke()
             }
@@ -108,7 +90,6 @@ object BillingRepository : PurchasesUpdatedListener {
         ) { result, data ->
 
             if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-                Log.e("BILLING", "Query failed: ${result.debugMessage}")
                 onResult(emptyList())
                 return@queryProductDetailsAsync
             }
@@ -135,47 +116,36 @@ object BillingRepository : PurchasesUpdatedListener {
             else -> productId
         }
 
-        return if (productType == BillingClient.ProductType.INAPP) {
+        val price = when (productType) {
+            BillingClient.ProductType.INAPP ->
+                oneTimePurchaseOfferDetails?.formattedPrice ?: "Free"
 
-            PlanUiModel(
-                id = productId,
-                title = title,
-                price = oneTimePurchaseOfferDetails?.formattedPrice ?: "Free",
-                hasFreeTrial = false,
-                isBestValue = false,
-                product = this
-            )
-
-        } else {
-
-            val offer = subscriptionOfferDetails?.firstOrNull()
-
-            val phases = offer?.pricingPhases?.pricingPhaseList.orEmpty()
-
-            val recurringPrice = phases
-                .lastOrNull { it.priceAmountMicros > 0L }
-                ?.formattedPrice
-
-            PlanUiModel(
-                id = productId,
-                title = title,
-                price = recurringPrice ?: "Free Trial Available",
-                hasFreeTrial = phases.any { it.priceAmountMicros == 0L },
-                isBestValue = productId == "monthly_subscription",
-                product = this
-            )
+            else ->
+                subscriptionOfferDetails?.firstOrNull()
+                    ?.pricingPhases
+                    ?.pricingPhaseList
+                    ?.lastOrNull()
+                    ?.formattedPrice ?: "Free"
         }
+
+        return PlanUiModel(
+            id = productId,
+            title = title,
+            price = price,
+            hasFreeTrial = false,
+            isBestValue = productId == "monthly_subscription",
+            product = this
+        )
     }
 
-    // ---------------- LAUNCH PURCHASE ----------------
+    // ---------------- PURCHASE ----------------
     fun launchPurchase(activity: Activity, plan: PlanUiModel) {
 
         val product = plan.product
 
         val params = if (product.productType == BillingClient.ProductType.SUBS) {
 
-            val offer = product.subscriptionOfferDetails?.firstOrNull()
-                ?: return
+            val offer = product.subscriptionOfferDetails?.firstOrNull() ?: return
 
             BillingFlowParams.ProductDetailsParams.newBuilder()
                 .setProductDetails(product)
@@ -202,6 +172,7 @@ object BillingRepository : PurchasesUpdatedListener {
         billingResult: BillingResult,
         purchases: MutableList<Purchase>?
     ) {
+
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             purchases.forEach { handlePurchase(it) }
         }
@@ -229,14 +200,16 @@ object BillingRepository : PurchasesUpdatedListener {
         }
     }
 
-    // ---------------- UNLOCK PREMIUM ----------------
+    // ---------------- UNLOCK PREMIUM (FIXED) ----------------
     private fun unlockPremium() {
 
+        // 🔥 SAVE PREMIUM PROPERLY
         PremiumManager.setPremium(appContext, true)
 
-        premiumCallback?.invoke()
+        Log.d("BILLING", "PREMIUM UNLOCKED")
 
-        Log.d("BILLING", "🔥 PREMIUM UNLOCKED + ADS DISABLED")
+        // 🔥 notify UI only (NO restart)
+        premiumCallback?.invoke()
     }
 
     // ---------------- RESTORE ----------------

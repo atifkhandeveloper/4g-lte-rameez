@@ -46,6 +46,8 @@ class SignalStrengthActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignalStrengthBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
+        applyEdgeToEdgePadding(binding.root)
         setContentView(binding.root)
 
 

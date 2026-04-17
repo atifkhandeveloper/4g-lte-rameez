@@ -50,6 +50,8 @@ class SimInfoActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySimInfoBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
+        applyEdgeToEdgePadding(binding.root)
         setContentView(binding.root)
 
 

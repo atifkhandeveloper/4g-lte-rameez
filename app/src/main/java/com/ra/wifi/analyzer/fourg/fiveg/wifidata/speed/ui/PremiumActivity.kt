@@ -8,19 +8,24 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import com.android.billingclient.api.ProductDetails
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.billing.BillingRepository
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityPaywallBinding
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityPurchaseBinding
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ContentPurchaseBinding
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.MainActivity
 
 class PremiumActivity : AppCompatActivity() {
 
     private lateinit var btnWeekly: RadioButton
-    private lateinit var btnMonthly: RadioButton
+    private lateinit var btnYearly: RadioButton
     private lateinit var btnLifetime: RadioButton
 
     private lateinit var btnSubscribe: AppCompatButton
@@ -32,15 +37,32 @@ class PremiumActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
+    // prevent multiple ad triggers
+    private var isAdShownOnClose = false
+    lateinit var binding: ActivityPaywallBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_paywall)
+        binding = ActivityPaywallBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // ✅ If already premium → skip screen
+        if (PremiumManager.isPremium(this)) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
 
         initViews()
         initPlans()
         setupClicks()
         setupDefaultSelection()
-        loadAd()
+
+        // ✅ Load ads only for non-premium
+        if (PremiumManager.shouldShowAds(this)) {
+            loadAd()
+        }
 
         showCloseButtonAfterDelay()
 
@@ -48,54 +70,51 @@ class PremiumActivity : AppCompatActivity() {
             this,
             onPremiumUnlocked = {
                 setResult(RESULT_OK)
+
+                // ✅ Refresh app (remove ads everywhere)
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         )
     }
 
-    // ---------------- INIT VIEWS ----------------
+    // ---------------- INIT ----------------
     private fun initViews() {
-
         btnWeekly = findViewById(R.id.btnWeekly)
-        btnMonthly = findViewById(R.id.btnYearly)
+        btnYearly = findViewById(R.id.btnYearly)
         btnLifetime = findViewById(R.id.lifeTime)
 
         btnSubscribe = findViewById(R.id.btnSubscribe)
         btnRestore = findViewById(R.id.btnRestore)
         btnClose = findViewById(R.id.btnClose)
 
-        // hide initially
         btnClose.visibility = View.INVISIBLE
     }
 
-    // ---------------- SHOW CLOSE AFTER 3 SEC ----------------
     private fun showCloseButtonAfterDelay() {
         handler.postDelayed({
             btnClose.visibility = View.VISIBLE
         }, 3000)
     }
 
-    // ---------------- DEFAULT ----------------
     private fun setupDefaultSelection() {
         btnWeekly.isChecked = true
         updateButtonText("weekly_fourg")
     }
 
-    // ---------------- LOAD PLANS ----------------
+    // ---------------- PLANS ----------------
     private fun initPlans() {
         plans = BillingRepository.getCachedPlans()
         bindPlans()
     }
 
     private fun bindPlans() {
-
         btnWeekly.text = formatPlan("weekly_fourg")
-        btnMonthly.text = formatPlan("monthly_subscription")
+        btnYearly.text = formatPlan("monthly_subscription")
         btnLifetime.text = formatPlan("lifetime")
     }
 
     private fun formatPlan(id: String): String {
-
         val plan = plans.find { it.id == id } ?: return "Loading..."
 
         return buildString {
@@ -114,7 +133,7 @@ class PremiumActivity : AppCompatActivity() {
         }
     }
 
-    // ---------------- CLICK ----------------
+    // ---------------- CLICKS ----------------
     private fun setupClicks() {
 
         btnWeekly.setOnClickListener {
@@ -122,8 +141,8 @@ class PremiumActivity : AppCompatActivity() {
             updateButtonText("weekly_fourg")
         }
 
-        btnMonthly.setOnClickListener {
-            selectOnly(btnMonthly)
+        btnYearly.setOnClickListener {
+            selectOnly(btnYearly)
             updateButtonText("monthly_subscription")
         }
 
@@ -136,7 +155,7 @@ class PremiumActivity : AppCompatActivity() {
 
             val selected = when {
                 btnWeekly.isChecked -> plans.find { it.id == "weekly_fourg" }
-                btnMonthly.isChecked -> plans.find { it.id == "monthly_subscription" }
+                btnYearly.isChecked -> plans.find { it.id == "monthly_subscription" }
                 btnLifetime.isChecked -> plans.find { it.id == "lifetime" }
                 else -> null
             } ?: return@setOnClickListener
@@ -148,21 +167,32 @@ class PremiumActivity : AppCompatActivity() {
             // BillingRepository.restorePurchases(this)
         }
 
+        // ✅ CLOSE BUTTON WITH AD (NON-PREMIUM ONLY)
         btnClose.setOnClickListener {
-            showAd()
+
+            if (PremiumManager.isPremium(this)) {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+                return@setOnClickListener
+            }
+
+            if (!isAdShownOnClose) {
+                isAdShownOnClose = true
+                showAdOnClose()
+            } else {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
         }
     }
 
-    // ---------------- SINGLE SELECT ----------------
     private fun selectOnly(selected: RadioButton) {
         btnWeekly.isChecked = selected == btnWeekly
-        btnMonthly.isChecked = selected == btnMonthly
+        btnYearly.isChecked = selected == btnYearly
         btnLifetime.isChecked = selected == btnLifetime
     }
 
-    // ---------------- BUTTON TEXT ----------------
     private fun updateButtonText(planId: String) {
-
         btnSubscribe.text = when (planId) {
             "weekly_fourg" -> "START FREE TRIAL"
             "monthly_subscription" -> "SUBSCRIBE NOW"
@@ -174,26 +204,39 @@ class PremiumActivity : AppCompatActivity() {
     // ---------------- ADS ----------------
     private fun loadAd() {
 
-        com.google.android.gms.ads.interstitial.InterstitialAd.load(
+        if (!PremiumManager.shouldShowAds(this)) {
+            interstitialAd = null
+            return
+        }
+
+        InterstitialAd.load(
             this,
             getString(R.string.inter),
-            com.google.android.gms.ads.AdRequest.Builder().build(),
-            object : com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback() {
+            AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
 
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
                 }
 
-                override fun onAdFailedToLoad(error: com.google.android.gms.ads.LoadAdError) {
+                override fun onAdFailedToLoad(error: LoadAdError) {
                     interstitialAd = null
                 }
             }
         )
     }
 
-    private fun showAd() {
+    private fun showAdOnClose() {
+
+        if (!PremiumManager.shouldShowAds(this)) {
+
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
 
         if (interstitialAd == null) {
+
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
@@ -213,7 +256,6 @@ class PremiumActivity : AppCompatActivity() {
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                     interstitialAd = null
                     loadAd()
-
                     startActivity(Intent(this@PremiumActivity, MainActivity::class.java))
                     finish()
                 }
@@ -221,6 +263,7 @@ class PremiumActivity : AppCompatActivity() {
 
         interstitialAd?.show(this)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)

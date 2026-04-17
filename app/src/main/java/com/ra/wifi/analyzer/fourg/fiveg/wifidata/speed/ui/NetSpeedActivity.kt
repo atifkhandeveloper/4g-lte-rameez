@@ -69,6 +69,8 @@ class NetSpeedActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNetSpeedBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
+        applyEdgeToEdgePadding(binding.root)
         setContentView(binding.root)
 
 //        nativeAds()

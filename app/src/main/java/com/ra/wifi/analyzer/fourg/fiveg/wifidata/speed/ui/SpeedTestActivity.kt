@@ -39,6 +39,8 @@ class SpeedTestActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivitySpeedTestBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
+        applyEdgeToEdgePadding(binding.root)
         setContentView(binding.root)
 
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)

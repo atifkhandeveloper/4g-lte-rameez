@@ -53,6 +53,8 @@ class DataUsageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDataUsageBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
+        applyEdgeToEdgePadding(binding.root)
         setContentView(binding.root)
 
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)

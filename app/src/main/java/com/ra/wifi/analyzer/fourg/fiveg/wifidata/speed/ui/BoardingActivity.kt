@@ -21,6 +21,7 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adapters.ImageSliderAdapt
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityBoardingBinding
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.splash.SecondTimeOnly
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.ADUnitPlacements
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.NativeAdPair
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.loadNativeAds
@@ -46,6 +47,8 @@ class BoardingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBoardingBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
+        applyEdgeToEdgePadding(binding.root)
         setContentView(binding.root)
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -105,7 +108,7 @@ class BoardingActivity : BaseActivity() {
                 if (position == 2) {
                     binding.doneBtn.setOnClickListener {
                         SharedPrefObj.saveAuthToken(this@BoardingActivity, "UserRegistered")
-                        NewScreen.start(this@BoardingActivity, PremiumActivity::class.java)
+                        NewScreen.start(this@BoardingActivity, SecondTimeOnly::class.java)
                         finish()
                     }
                 }

@@ -196,6 +196,7 @@
                     android:id="@+id/my_template"
                     app:gnt_template_type="@layout/gnt_small_template_view"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="match_parent" />
 
                 <!--                <car.google.android.ads.nativetemplates.TemplateView-->

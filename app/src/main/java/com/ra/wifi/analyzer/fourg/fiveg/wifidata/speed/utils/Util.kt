@@ -1,9 +1,14 @@
 package dev.jahidhasanco.networkusage
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.telephony.TelephonyManager
+import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 
 
 object Util {
@@ -60,4 +65,6 @@ object Util {
         data = listOf(sentData, receivedData, totalData)
         return data
     }
+
+
 }

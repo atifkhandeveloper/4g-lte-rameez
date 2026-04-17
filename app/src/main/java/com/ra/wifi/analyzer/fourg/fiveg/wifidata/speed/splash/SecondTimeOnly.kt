@@ -24,6 +24,7 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.AnimationActivity
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.FirebaseAds.AdmobAds
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.MainActivity
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.PremiumActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConfigParam
 
 class SecondTimeOnly : BaseActivity() {
@@ -43,6 +44,8 @@ class SecondTimeOnly : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySecondTimeOnlyBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
+        applyEdgeToEdgePadding(binding.root)
         setContentView(binding.root)
 
         if (PremiumManager.shouldShowAds(this)) {
@@ -57,7 +60,7 @@ class SecondTimeOnly : BaseActivity() {
                 Toast.makeText(this, "Please Select Any Category", Toast.LENGTH_SHORT).show()
             } else {
 
-                    startActivity(Intent(this@SecondTimeOnly, AnimationActivity::class.java))
+                    startActivity(Intent(this@SecondTimeOnly, PremiumActivity::class.java))
                     finish()
 
 
