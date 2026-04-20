@@ -25,6 +25,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.*
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityMainBinding
@@ -120,7 +121,8 @@ class MainActivity : BaseActivity() {
     // ---------------- BACK ----------------
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        showExitDialog()
+        onBackPressed()
+//        showExitDialog()
     }
 
     private fun showExitDialog() {
@@ -161,6 +163,16 @@ class MainActivity : BaseActivity() {
                 nativeAd?.destroy()
                 nativeAd = ad
 
+                // ✅ ADD THIS BLOCK HERE
+                ad.setOnPaidEventListener { adValue ->
+                    val revenue = adValue.valueMicros / 1_000_000.0
+                    val currency = adValue.currencyCode
+
+                    Log.d("Ads", "Native Revenue: $revenue $currency")
+
+                    sendRevenueToFirebase(revenue, currency)
+                }
+
                 val styles = NativeTemplateStyle.Builder()
                     .withMainBackgroundColor(ColorDrawable(Color.WHITE))
                     .build()
@@ -191,6 +203,16 @@ class MainActivity : BaseActivity() {
 
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
+
+                    // ✅ ADD THIS
+                    interstitialAd?.setOnPaidEventListener { adValue ->
+                        val revenue = adValue.valueMicros / 1_000_000.0
+                        val currency = adValue.currencyCode
+
+                        Log.d("Ads", "Interstitial Revenue: $revenue $currency")
+
+                        sendRevenueToFirebase(revenue, currency)
+                    }
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -198,6 +220,19 @@ class MainActivity : BaseActivity() {
                 }
             }
         )
+    }
+
+    fun sendRevenueToFirebase(value: Double, currency: String) {
+        val bundle = Bundle().apply {
+            putDouble("value", value)
+            putString("currency", currency)
+            putString("ad_platform", "admob")
+            putString("ad_source", "admob")
+            putString("ad_format", "native") // IMPORTANT
+        }
+
+        FirebaseAnalytics.getInstance(this)
+            .logEvent("ad_impression", bundle)
     }
 
     private fun showInterstitial(action: () -> Unit) {
@@ -341,4 +376,6 @@ class MainActivity : BaseActivity() {
         nativeAd = null
         super.onDestroy()
     }
+
+
 }

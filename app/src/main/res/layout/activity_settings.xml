@@ -108,6 +108,7 @@
                     android:id="@+id/pro"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_44sdp"
+                    android:visibility="gone"
                     android:background="@drawable/setting_item_selector">
 
                     <TextView

@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.gms.ads.nativead.NativeAd
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.features.showCustomToast
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.InternetConnection
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
@@ -39,6 +40,8 @@ class LTEDetailsActivity : LocalizationActivity() {
     private val sharedPreferences: SharedPreferences by lazy {
         getSharedPreferences("Myrehgffs", Context.MODE_PRIVATE)
     }
+    private var nativeAd: NativeAd? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

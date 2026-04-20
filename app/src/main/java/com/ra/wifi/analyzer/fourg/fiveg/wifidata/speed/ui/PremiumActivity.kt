@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.RadioButton
@@ -14,6 +15,8 @@ import androidx.appcompat.widget.AppCompatButton
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.billing.BillingRepository
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
@@ -22,7 +25,7 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityPurch
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ContentPurchaseBinding
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui.MainActivity
 
-class PremiumActivity : AppCompatActivity() {
+class PremiumActivity : BaseActivity() {
 
     private lateinit var btnWeekly: RadioButton
     private lateinit var btnYearly: RadioButton
@@ -45,6 +48,8 @@ class PremiumActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPaywallBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
+        applyEdgeToEdgePadding(binding.root)
         setContentView(binding.root)
 
         // ✅ If already premium → skip screen
@@ -204,11 +209,6 @@ class PremiumActivity : AppCompatActivity() {
     // ---------------- ADS ----------------
     private fun loadAd() {
 
-        if (!PremiumManager.shouldShowAds(this)) {
-            interstitialAd = null
-            return
-        }
-
         InterstitialAd.load(
             this,
             getString(R.string.inter),
@@ -217,13 +217,36 @@ class PremiumActivity : AppCompatActivity() {
 
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
+
+                    // ✅ ADD THIS
+                    interstitialAd?.setOnPaidEventListener { adValue ->
+                        val revenue = adValue.valueMicros / 1_000_000.0
+                        val currency = adValue.currencyCode
+
+                        Log.d("Ads", "Interstitial Revenue: $revenue $currency")
+
+                        sendRevenueToFirebase(revenue, currency)
+                    }
                 }
 
-                override fun onAdFailedToLoad(error: LoadAdError) {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
                     interstitialAd = null
                 }
             }
         )
+    }
+
+    fun sendRevenueToFirebase(value: Double, currency: String) {
+        val bundle = Bundle().apply {
+            putDouble("value", value)
+            putString("currency", currency)
+            putString("ad_platform", "admob")
+            putString("ad_source", "admob")
+            putString("ad_format", "native") // IMPORTANT
+        }
+
+        FirebaseAnalytics.getInstance(this)
+            .logEvent("ad_impression", bundle)
     }
 
     private fun showAdOnClose() {
@@ -267,5 +290,8 @@ class PremiumActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
+    }
+    override fun onBackPressed() {
+        // Do nothing
     }
 }

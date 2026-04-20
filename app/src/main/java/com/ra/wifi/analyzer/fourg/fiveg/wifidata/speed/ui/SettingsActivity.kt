@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
@@ -16,9 +17,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
 import com.google.android.ads.nativetemplates.NativeTemplateStyle
 import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
@@ -42,6 +47,7 @@ import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.openUrlInBrowser
 class SettingsActivity : BaseActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     lateinit var binding: ActivitySettingsBinding
+    private var nativeAd: NativeAd? = null
 
     var fabVisible = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +66,7 @@ class SettingsActivity : BaseActivity() {
         toolBar()
         if (PremiumManager.shouldShowAds(this)) {
             loadnative()
+            binding.pro.visibility = View.VISIBLE
         }
         binding.appLangBtn.setOnClickListener {
             startActivity(
@@ -403,40 +410,61 @@ class SettingsActivity : BaseActivity() {
 
     private fun loadnative() {
 
-        MobileAds.initialize(this)
-
-        val background = ColorDrawable(Color.WHITE)
+        if (PremiumManager.isPremium(this)) return
 
         val template = findViewById<TemplateView>(R.id.my_template)
 
-        // default hidden until ad loads
-        template.visibility = View.GONE
+        MobileAds.initialize(this)
 
-        val adLoader = AdLoader.Builder(this, resources.getString(R.string.nativeId))
-            .forNativeAd { nativeAd ->
+        val adLoader = AdLoader.Builder(this, getString(R.string.nativeId))
+            .forNativeAd { ad ->
+
+                // 🔥 destroy previous ad first
+                nativeAd?.destroy()
+                nativeAd = ad
+
+                // ✅ ADD THIS BLOCK HERE
+                ad.setOnPaidEventListener { adValue ->
+                    val revenue = adValue.valueMicros / 1_000_000.0
+                    val currency = adValue.currencyCode
+
+                    Log.d("Ads", "Native Revenue: $revenue $currency")
+
+                    sendRevenueToFirebase(revenue, currency)
+                }
 
                 val styles = NativeTemplateStyle.Builder()
-                    .withMainBackgroundColor(background)
+                    .withMainBackgroundColor(ColorDrawable(Color.WHITE))
                     .build()
 
                 template.setStyles(styles)
-                template.setNativeAd(nativeAd)
-
-                // ✅ SHOW when ad is loaded
+                template.setNativeAd(ad)
                 template.visibility = View.VISIBLE
             }
-            .withAdListener(object : com.google.android.gms.ads.AdListener() {
+            .withAdListener(object : AdListener() {
 
-                override fun onAdFailedToLoad(loadAdError: com.google.android.gms.ads.LoadAdError) {
-                    super.onAdFailedToLoad(loadAdError)
-
-                    // ❌ HIDE when ad fails
+                override fun onAdFailedToLoad(error: LoadAdError) {
                     template.visibility = View.GONE
                 }
             })
             .build()
 
         adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+
+
+    fun sendRevenueToFirebase(value: Double, currency: String) {
+        val bundle = Bundle().apply {
+            putDouble("value", value)
+            putString("currency", currency)
+            putString("ad_platform", "admob")
+            putString("ad_source", "admob")
+            putString("ad_format", "native") // IMPORTANT
+        }
+
+        FirebaseAnalytics.getInstance(this)
+            .logEvent("ad_impression", bundle)
     }
 
 }
