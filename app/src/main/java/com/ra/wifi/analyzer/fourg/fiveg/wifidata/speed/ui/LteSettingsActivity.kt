@@ -17,19 +17,24 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
 import com.google.android.ads.nativetemplates.NativeTemplateStyle
 import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityLteSettingsBinding
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.features.newScreen
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.isAdEnable
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.FirebaseAds.AdmobAds
 //import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.adsManager.BannerAdsManager
@@ -39,6 +44,7 @@ import dev.jahidhasanco.networkusage.Interval
 import dev.jahidhasanco.networkusage.NetworkType
 import dev.jahidhasanco.networkusage.NetworkUsageManager
 import dev.jahidhasanco.networkusage.Util
+import kotlin.random.Random
 
 class LteSettingsActivity : BaseActivity() {
     private val sharedPreferences: SharedPreferences by lazy {
@@ -47,6 +53,8 @@ class LteSettingsActivity : BaseActivity() {
     lateinit var binding: ActivityLteSettingsBinding
     private var adView: AdView? = null
     private var nativeAd: NativeAd? = null
+    private var interstitialAd: InterstitialAd? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,14 +64,13 @@ class LteSettingsActivity : BaseActivity() {
         setContentView(binding.root)
 
 //        NativeAdsManager.CheckNative(this, window.decorView.rootView)
-
-
         toolbar()
         darkMode()
 
         if (PremiumManager.shouldShowAds(this)) {
             loadnative()
             loadBanner()
+            loadAd()
         }
 
 //        loadNativeAd()
@@ -158,7 +165,11 @@ class LteSettingsActivity : BaseActivity() {
     }
 
     private fun toolbar() {
-        binding.toolBar.backBtn.setOnClickListener { onBackPressed() }
+        binding.toolBar.backBtn.setOnClickListener {
+            showAdWithRandom { newScreen(MainActivity::class.java)
+                finish()
+            }
+        }
         binding.toolBar.title.setText(resources.getString(R.string.fourgSettings))
         binding.toolBar.removeAdsbtn.visibility = View.GONE
 
@@ -294,6 +305,93 @@ class LteSettingsActivity : BaseActivity() {
             sendRevenueToFirebase(revenue, currency)
         }
     }
+
+
+    private fun isPremium() = PremiumManager.isPremium(this)
+
+    private fun loadAd() {
+        if (isPremium()) return
+
+        InterstitialAd.load(
+            this,
+            getString(R.string.inter),
+            AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
+
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    interstitialAd = ad
+
+                    // ✅ ADD THIS
+                    interstitialAd?.setOnPaidEventListener { adValue ->
+                        val revenue = adValue.valueMicros / 1_000_000.0
+                        val currency = adValue.currencyCode
+
+                        Log.d("Ads", "Interstitial Revenue: $revenue $currency")
+
+                        sendRevenueToFirebase(revenue, currency)
+                    }
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    interstitialAd = null
+                }
+            }
+        )
+    }
+
+
+    private fun showInterstitial(action: () -> Unit) {
+
+        if (isPremium()) {
+            action()
+            return
+        }
+
+        if (interstitialAd == null) {
+            action()
+            loadAd()
+            return
+        }
+
+        interstitialAd?.fullScreenContentCallback =
+            object : FullScreenContentCallback() {
+
+                override fun onAdDismissedFullScreenContent() {
+                    interstitialAd = null
+                    loadAd()
+                    action()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    interstitialAd = null
+                    loadAd()
+                    action()
+                }
+            }
+
+        interstitialAd?.show(this)
+    }
+
+    private fun showAdWithRandom(action: () -> Unit) {
+        if (isPremium()) {
+            action()
+            return
+        }
+
+        if (Random.nextInt(10) < 8) {
+            showInterstitial(action)
+        } else {
+            action()
+        }
+    }
+
+    override fun onBackPressed() {
+        showAdWithRandom {
+            newScreen(MainActivity::class.java)
+            finish()
+        }
+    }
+
 
 
 //    private fun nativeAds() {

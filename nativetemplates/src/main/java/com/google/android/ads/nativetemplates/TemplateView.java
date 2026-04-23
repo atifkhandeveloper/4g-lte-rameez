@@ -126,16 +126,16 @@ public class TemplateView extends FrameLayout {
     Drawable mainBackground = styles.getMainBackgroundColor();
     if (mainBackground != null) {
       if (background != null) {
-        background.setBackground(mainBackground);
+//        background.setBackground(mainBackground);
       }
       if (primaryView != null) {
-        primaryView.setBackground(mainBackground);
+//        primaryView.setBackground(mainBackground);
       }
       if (secondaryView != null) {
-        secondaryView.setBackground(mainBackground);
+//        secondaryView.setBackground(mainBackground);
       }
       if (tertiaryView != null) {
-        tertiaryView.setBackground(mainBackground);
+//        tertiaryView.setBackground(mainBackground);
       }
     }
 

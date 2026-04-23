@@ -81,7 +81,7 @@ class BoardingActivity : BaseActivity() {
         }
         binding.skipBtn.setOnClickListener {
             SharedPrefObj.saveAuthToken(this@BoardingActivity, "UserRegistered")
-            NewScreen.start(this, MainActivity::class.java)
+            NewScreen.start(this, SecondTimeOnly::class.java)
             finish()
         }
 

@@ -5,8 +5,22 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import com.google.android.ads.nativetemplates.NativeTemplateStyle
+import com.google.android.ads.nativetemplates.TemplateView
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.BaseActivity
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.app.AppDelegate
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivitySplashBinding
@@ -22,6 +36,7 @@ class SplashActivity : BaseActivity() {
     private var animator: ObjectAnimator? = null
 
     private var hasNavigated = false
+    private var nativeAd: NativeAd? = null
 
     private val sharedPreferences by lazy {
         getSharedPreferences("Myrehgffs", Context.MODE_PRIVATE)
@@ -39,6 +54,10 @@ class SplashActivity : BaseActivity() {
 
         incrementLaunchCount()
         animateProgressBar()
+
+        if (PremiumManager.shouldShowAds(this)) {
+            loadnative()
+        }
     }
 
     // ---------------- SPLASH ANIMATION ----------------
@@ -141,5 +160,64 @@ class SplashActivity : BaseActivity() {
         animator?.removeAllListeners()
         animator = null
         super.onDestroy()
+    }
+
+    private fun loadnative() {
+
+        if (PremiumManager.isPremium(this)) return
+
+        val template = findViewById<TemplateView>(R.id.my_template)
+
+        MobileAds.initialize(this)
+
+        val adLoader = AdLoader.Builder(this, getString(R.string.nativeId))
+            .forNativeAd { ad ->
+
+                // 🔥 destroy previous ad first
+                nativeAd?.destroy()
+                nativeAd = ad
+
+                // ✅ ADD THIS BLOCK HERE
+                ad.setOnPaidEventListener { adValue ->
+                    val revenue = adValue.valueMicros / 1_000_000.0
+                    val currency = adValue.currencyCode
+
+                    Log.d("Ads", "Native Revenue: $revenue $currency")
+
+                    sendRevenueToFirebase(revenue, currency)
+                }
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(ColorDrawable(Color.WHITE))
+                    .build()
+
+                template.setStyles(styles)
+                template.setNativeAd(ad)
+                template.visibility = View.VISIBLE
+            }
+            .withAdListener(object : AdListener() {
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    template.visibility = View.GONE
+                }
+            })
+            .build()
+
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+
+
+    fun sendRevenueToFirebase(value: Double, currency: String) {
+        val bundle = Bundle().apply {
+            putDouble("value", value)
+            putString("currency", currency)
+            putString("ad_platform", "admob")
+            putString("ad_source", "admob")
+            putString("ad_format", "native") // IMPORTANT
+        }
+
+        FirebaseAnalytics.getInstance(this)
+            .logEvent("ad_impression", bundle)
     }
 }

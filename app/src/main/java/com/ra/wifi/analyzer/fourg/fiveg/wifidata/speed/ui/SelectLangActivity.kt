@@ -3,12 +3,14 @@ package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
@@ -750,15 +752,14 @@ class SelectLangActivity : BaseActivity() {
             }
         }
     }
-
     private fun toolbar() {
-        val typeface =
-            ResourcesCompat.getFont(this, R.font.poppins_bold) // replace with your font resource
+        val typeface = ResourcesCompat.getFont(this, R.font.poppins_bold)
         binding.toolBar.title.typeface = typeface
         binding.toolBar.removeAdsbtn.setImageResource(R.drawable.check_circle_language)
+        binding.toolBar.removeAdsbtn.imageTintList =
+            ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenUsed))
         binding.toolBar.backBtn.visibility = View.GONE
         binding.toolBar.title.text = resources.getString(R.string.settLangT)
-
     }
 
     private fun loadnative() {

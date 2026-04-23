@@ -1,6 +1,7 @@
 package com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.ui
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,6 +12,7 @@ import android.provider.Settings
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
@@ -18,10 +20,17 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 
 import com.akexorcist.localizationactivity.ui.LocalizationActivity
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.features.showCustomToast
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.InternetConnection
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.R
+import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.core.PremiumManager
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.databinding.ActivityLtedetailsBinding
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.SharedPrefObj
 import com.ra.wifi.analyzer.fourg.fiveg.wifidata.speed.utils.ConstantVariables
@@ -41,6 +50,8 @@ class LTEDetailsActivity : LocalizationActivity() {
         getSharedPreferences("Myrehgffs", Context.MODE_PRIVATE)
     }
     private var nativeAd: NativeAd? = null
+    private var adView: AdView? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +65,10 @@ class LTEDetailsActivity : LocalizationActivity() {
         poneIndextDetails()
         openNetworkSettings()
         refreshLayout()
+
+        if (PremiumManager.shouldShowAds(this)) {
+            loadBanner()
+        }
         binding.runPingBtn.setOnClickListener {
             lifecycleScope.launch {
                 val host = "www.google.com" // Replace with actual host
@@ -502,6 +517,57 @@ class LTEDetailsActivity : LocalizationActivity() {
                 showCustomToast("Permission Denied")
                 // Permission denied. Inform the user and handle the situation
             }
+        }
+    }
+
+    fun sendRevenueToFirebase(value: Double, currency: String) {
+        val bundle = Bundle().apply {
+            putDouble("value", value)
+            putString("currency", currency)
+            putString("ad_platform", "admob")
+            putString("ad_source", "admob")
+            putString("ad_format", "native") // IMPORTANT
+        }
+
+        FirebaseAnalytics.getInstance(this)
+            .logEvent("ad_impression", bundle)
+    }
+
+    private fun loadBanner() {
+        val adView = AdView(this)
+        adView.adUnitId = resources.getString(R.string.bannerId)
+
+        adView.setAdSize(AdSize.getLargeAnchoredAdaptiveBannerAdSize(this, 360))
+        this.adView = adView
+
+        binding.adViewContainer.removeAllViews()
+        binding.adViewContainer.addView(adView)
+
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                Log.d(TAG, "Ad loaded.")
+            }
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                Log.i(TAG, "Ad failed to load: ${error.message}")
+            }
+
+            override fun onAdImpression() {
+                Log.d(TAG, "Ad recorded an impression.")
+            }
+        }
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+
+        // ✅ ADD THIS (VERY IMPORTANT)
+        adView.setOnPaidEventListener { adValue ->
+            val revenue = adValue.valueMicros / 1_000_000.0
+            val currency = adValue.currencyCode
+
+            Log.d(TAG, "Banner Revenue: $revenue $currency")
+
+            sendRevenueToFirebase(revenue, currency)
         }
     }
 
