@@ -121,8 +121,8 @@ class MainActivity : BaseActivity() {
     // ---------------- BACK ----------------
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        onBackPressed()
-//        showExitDialog()
+//        onBackPressed()
+        showExitDialog()
     }
 
     private fun showExitDialog() {
@@ -133,6 +133,12 @@ class MainActivity : BaseActivity() {
             .setCancelable(true)
             .create()
 
+        val template =
+            dialogView.findViewById<TemplateView>(R.id.my_template)
+
+        // Load Native Ad inside Exit Dialog
+        loadNativeForExitDialog(template)
+
         dialogView.findViewById<ConstraintLayout>(R.id.speedTestBtn).setOnClickListener {
             showInterstitial { newScreen(SpeedTestActivity::class.java) }
         }
@@ -140,6 +146,10 @@ class MainActivity : BaseActivity() {
         dialogView.findViewById<TextView>(R.id.tv_okBtn).setOnClickListener {
             dialog.dismiss()
             finishAffinity()
+        }
+
+        dialogView.findViewById<TextView>(R.id.tv_cancelBtn).setOnClickListener {
+            dialog.dismiss()
         }
 
         dialog.show()
@@ -169,6 +179,52 @@ class MainActivity : BaseActivity() {
                     val currency = adValue.currencyCode
 
                     Log.d("Ads", "Native Revenue: $revenue $currency")
+
+                    sendRevenueToFirebase(revenue, currency)
+                }
+
+                val styles = NativeTemplateStyle.Builder()
+                    .withMainBackgroundColor(ColorDrawable(Color.WHITE))
+                    .build()
+
+                template.setStyles(styles)
+                template.setNativeAd(ad)
+                template.visibility = View.VISIBLE
+            }
+            .withAdListener(object : AdListener() {
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    template.visibility = View.GONE
+                }
+            })
+            .build()
+
+        adLoader.loadAd(AdRequest.Builder().build())
+    }
+
+
+    private fun loadNativeForExitDialog(template: TemplateView) {
+
+        if (PremiumManager.isPremium(this)) {
+            template.visibility = View.GONE
+            return
+        }
+
+        MobileAds.initialize(this)
+
+        val adLoader = AdLoader.Builder(this, getString(R.string.nativeId))
+            .forNativeAd { ad ->
+
+                // Destroy previous ad first
+                nativeAd?.destroy()
+                nativeAd = ad
+
+                // Revenue Tracking
+                ad.setOnPaidEventListener { adValue ->
+                    val revenue = adValue.valueMicros / 1_000_000.0
+                    val currency = adValue.currencyCode
+
+                    Log.d("Ads", "Exit Dialog Native Revenue: $revenue $currency")
 
                     sendRevenueToFirebase(revenue, currency)
                 }
